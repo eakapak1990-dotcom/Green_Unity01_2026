@@ -1,0 +1,93 @@
+/* =====================================================================
+   1. GOOGLE FONTS IMPORT
+   ===================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Prompt:wght@400;600;800&family=Sarabun:wght@400;500;600&display=swap');
+
+/* =====================================================================
+   2. GLOBAL BASE & TYPOGRAPHY
+   ===================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* ฟอนต์หลักสำหรับเนื้อหาทั่วไป */
+  font-family: 'Sarabun', sans-serif;
+  background-color: #F9FAFB;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-title {
+  /* ฟอนต์หลักสำหรับหัวข้อ */
+  font-family: 'Prompt', sans-serif;
+}
+
+/* =====================================================================
+   3. CUSTOM SCROLLBAR (ESG Green Theme)
+   ===================================================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #66BB6A; /* เขียวอ่อน */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2E7D32; /* เขียวเข้ม */
+}
+
+/* =====================================================================
+   4. SWEETALERT2 OVERRIDES (แบรนดิ้งข้อความแจ้งเตือน)
+   ===================================================================== */
+div:where(.swal2-container) h2:where(.swal2-title) {
+  font-family: 'Prompt', sans-serif !important;
+  color: #2E7D32 !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+  font-family: 'Sarabun', sans-serif !important;
+  color: #4B5563 !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  background-color: #2E7D32 !important;
+  font-family: 'Prompt', sans-serif !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+  background-color: #EF4444 !important;
+  font-family: 'Prompt', sans-serif !important;
+  border-radius: 0.5rem !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3) !important;
+}
+
+/* =====================================================================
+   5. CUSTOM ANIMATIONS
+   ===================================================================== */
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
