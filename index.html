@@ -4,13 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แบบสำรวจกิจกรรมปลูกป่า Green Unity 2026</title>
+  
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Prompt:wght@400;800&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- SweetAlert2 & Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
-
   
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Tailwind Config Theme -->
   <script>
     tailwind.config = {
       theme: {
@@ -28,59 +36,70 @@
       }
     }
   </script>
-  <style>
-    .font-title { font-family: 'Prompt', sans-serif; font-weight: 800; }
-    .font-body { font-family: 'Sarabun', sans-serif; }
-  </style>
 </head>
-<body class="bg-white text-gray-800 font-body min-h-screen">
 
-  <div id="view-landing" class="max-w-6xl mx-auto px-4 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-3xl md:text-5xl font-title text-primary mb-4">Green Unity 2026</h1>
-      <p class="text-xl text-gray-600">รวมพลังภาคี ปลูกป่า สร้างอนาคตที่ยั่งยืน</p>
-    </div>
-    
-    <div class="grid md:grid-cols-2 gap-8 items-stretch">
-      <div class="border-4 border-cream p-8 rounded-2xl shadow-lg flex flex-col bg-white">
-        <h2 class="text-2xl font-title text-primary mb-4">🌿 ทำแบบสำรวจความประสงค์</h2>
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-600 h-48 overflow-y-auto mb-4 leading-relaxed">
-          <p class="font-semibold mb-2 text-gray-800">การขอความยินยอมในการประมวลผลข้อมูลส่วนบุคคล (ภาพถ่ายและภาพเคลื่อนไหว) เพื่อการประชาสัมพันธ์</p>
-          "ข้าพเจ้ายินยอมให้ บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน) เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ได้แก่ ภาพถ่าย ภาพเคลื่อนไหว และ/หรือเสียง ที่ถูกบันทึกในระหว่างการเข้าร่วมกิจกรรมนอกสถานที่ เพื่อวัตถุประสงค์ในการนำไปใช้จัดทำสื่อประชาสัมพันธ์กิจกรรมขององค์กร ผ่านช่องทางสื่อสารต่างๆ ทั้งภายในและภายนอก (เช่น เว็บไซต์, โซเชียลมีเดีย, สื่อสิ่งพิมพ์) ทั้งนี้ ข้าพเจ้าได้รับทราบว่าสามารถใช้สิทธิขอถอนความยินยอมนี้ได้ในภายหลัง ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (Privacy Policy) ของบริษัทฯ โดยการถอนความยินยอมจะไม่ส่งผลกระทบต่อการใช้ข้อมูลที่ได้ดำเนินการไปแล้วก่อนหน้านั้น"
-        </div>
-        <label class="flex items-start gap-3 mb-6 cursor-pointer">
-          <input type="checkbox" id="chk-pdpa" class="mt-1 w-5 h-5 accent-primary rounded">
-          <span class="text-sm select-none">ข้าพเจ้าอ่านรายละเอียดและกดยอมรับข้อตกลงความเป็นส่วนตัว (PDPA)</span>
-        </label>
-        <button onclick="handleStartSurvey()" class="mt-auto w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow Transition duration-200">เริ่มทำแบบสำรวจ</button>
+<!-- Layer 1: ภาพพื้นหลัง (ล็อกให้อยู่กับที่ด้วย bg-fixed) -->
+<body class="text-gray-800 font-body min-h-screen bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url('./assets/bg-main.jpg');">
+
+  <div class="min-h-screen w-full bg-white/85 backdrop-blur-sm flex flex-col">
+
+    <!-- ================= หน้าที่ 1: LANDING & PDPA GATEWAY ================= -->
+    <div id="view-landing" class="max-w-6xl mx-auto px-4 py-12 flex-1 w-full">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-5xl font-title text-primary mb-4 shadow-sm">Green Unity 2026</h1>
+        <p class="text-xl text-gray-900 font-semibold">รวมพลังภาคี ปลูกป่า สร้างอนาคตที่ยั่งยืน</p>
       </div>
       
-      <div class="border-4 border-cream p-8 rounded-2xl shadow-lg flex flex-col bg-white">
-        <h2 class="text-2xl font-title text-gray-700 mb-4">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
-        <p class="text-sm text-gray-500 mb-4">สำหรับเข้าตรวจดู Dashboard รายงานสถิติยอดผู้ลงทะเบียนรวม</p>
-        <div class="space-y-4 mb-6">
-          <div>
-            <label class="block text-xs font-semibold mb-1 text-gray-600">Username</label>
-            <input type="text" id="admin-user" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+      <div class="grid md:grid-cols-2 gap-8 items-stretch">
+        <!-- Card แบบสำรวจ -->
+        <div class="border-4 border-cream p-8 rounded-2xl shadow-xl flex flex-col bg-white">
+          <h2 class="text-2xl font-title text-primary mb-4">🌿 ทำแบบสำรวจความประสงค์</h2>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700 h-48 overflow-y-auto mb-4 leading-relaxed">
+            <p class="font-semibold mb-2 text-gray-900">การขอความยินยอมในการประมวลผลข้อมูลส่วนบุคคล (ภาพถ่ายและภาพเคลื่อนไหว) เพื่อการประชาสัมพันธ์</p>
+            "ข้าพเจ้ายินยอมให้ บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน) เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ได้แก่ ภาพถ่าย ภาพเคลื่อนไหว และ/หรือเสียง ที่ถูกบันทึกในระหว่างการเข้าร่วมกิจกรรมนอกสถานที่ เพื่อวัตถุประสงค์ในการนำไปใช้จัดทำสื่อประชาสัมพันธ์กิจกรรมขององค์กร ผ่านช่องทางสื่อสารต่างๆ ทั้งภายในและภายนอก (เช่น เว็บไซต์, โซเชียลมีเดีย, สื่อสิ่งพิมพ์) ทั้งนี้ ข้าพเจ้าได้รับทราบว่าสามารถใช้สิทธิขอถอนความยินยอมนี้ได้ในภายหลัง ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (Privacy Policy) ของบริษัทฯ โดยการถอนความยินยอมจะไม่ส่งผลกระทบต่อการใช้ข้อมูลที่ได้ดำเนินการไปแล้วก่อนหน้านั้น"
           </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1 text-gray-600">Password</label>
-            <input type="password" id="admin-pass" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-          </div>
+          <label class="flex items-start gap-3 mb-6 cursor-pointer">
+            <input type="checkbox" id="chk-pdpa" class="mt-1 w-5 h-5 accent-primary rounded cursor-pointer">
+            <span class="text-sm select-none font-semibold text-gray-800">ข้าพเจ้าอ่านรายละเอียดและกดยอมรับข้อตกลงความเป็นส่วนตัว (PDPA)</span>
+          </label>
+          <button onclick="handleStartSurvey()" class="mt-auto w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200">เริ่มทำแบบสำรวจ</button>
         </div>
-        <button onclick="handleAdminLogin()" class="mt-auto w-full bg-gray-800 hover:bg-gray-950 text-white font-title py-3 rounded-xl shadow transition duration-200">เข้าสู่ระบบ Dashboard</button>
+        
+        <!-- Card สำหรับ Admin -->
+        <div class="border-4 border-cream p-8 rounded-2xl shadow-xl flex flex-col bg-white">
+          <h2 class="text-2xl font-title text-gray-800 mb-4">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
+          <p class="text-sm text-gray-600 mb-4 font-semibold">สำหรับเข้าตรวจดู Dashboard รายงานสถิติยอดผู้ลงทะเบียนรวม</p>
+          <div class="space-y-4 mb-6">
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-gray-700">Username</label>
+              <input type="text" id="admin-user" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none bg-gray-50">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-gray-700">Password</label>
+              <input type="password" id="admin-pass" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none bg-gray-50">
+            </div>
+          </div>
+          <button onclick="handleAdminLogin()" class="mt-auto w-full bg-gray-800 hover:bg-gray-950 text-white font-title py-3 rounded-xl shadow transition duration-200">เข้าสู่ระบบ Dashboard</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="view-form" class="max-w-4xl mx-auto px-4 py-12 hidden">
-    <div class="bg-white border-2 border-cream rounded-2xl p-6 md:p-10 shadow-xl">
-       </div>
-  </div>
+    <!-- ================= หน้าที่ 2: FORM INPUTS (ซ่อนไว้ตอนเริ่มต้น) ================= -->
+    <!-- Layer 3: แบบฟอร์มลอยอยู่บนสุด -->
+    <div id="view-form" class="max-w-4xl mx-auto px-4 py-12 hidden fade-in w-full">
+      <div class="bg-white border-2 border-cream rounded-2xl p-6 md:p-10 shadow-2xl relative">
+         <!-- Javascript จาก app.js จะนำโครงสร้างฟอร์มมาใส่ใน div นี้ -->
+      </div>
+    </div>
 
-  <div id="view-admin" class="min-h-screen bg-gray-100 flex hidden">
-     </div>
+    <!-- ================= หน้าที่ 3: ADMIN DASHBOARD (ซ่อนไว้ตอนเริ่มต้น) ================= -->
+    <div id="view-admin" class="min-h-screen flex hidden w-full bg-white/95">
+       <!-- Javascript จาก app.js จะนำโครงสร้าง Dashboard มาใส่ที่นี่ -->
+    </div>
 
+  </div> <!-- ปิด div Overlay -->
+
+  <!-- เรียกใช้งาน Javascript -->
   <script src="app.js"></script>
 </body>
 </html>
