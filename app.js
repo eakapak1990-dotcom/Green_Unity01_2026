@@ -1,7 +1,6 @@
 // =====================================================================
 // 1. API CONFIGURATION
 // =====================================================================
-// นำ Web App URL ที่คุณเพิ่งได้มาใส่เป็น Endpoint หลัก
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbznqwtZyuHeeRUW-OJwyWFGhHugm19rBbjKMbQTGIz-0z6B0ANJabRWZUeGXMmnHkrTQw/exec";
 
 const orgOptionsMapping = {
@@ -25,8 +24,7 @@ function handleStartSurvey() {
   }
   
   document.getElementById("view-landing").classList.add("hidden");
-  const formView = document.getElementById("view-form");
-  formView.classList.remove("hidden");
+  document.getElementById("view-form").classList.remove("hidden");
   
   renderSurveyForm();
 }
@@ -34,83 +32,150 @@ function handleStartSurvey() {
 function renderSurveyForm() {
   const formContainer = document.querySelector("#view-form > div");
   formContainer.innerHTML = `
-    <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 1: ข้อมูลผู้ประสานงาน</h2>
-    
     <form id="main-survey-form" onsubmit="submitSurvey(event)" class="space-y-6">
-      <div>
-        <label class="block font-semibold mb-1">1. ชื่อ-นามสกุลผู้ประสานงาน <span class="text-red-500">*</span></label>
-        <input type="text" id="inp-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-      </div>
       
-      <div class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block font-semibold mb-1">2. ประเภทองค์กรหรือหน่วยงาน <span class="text-red-500">*</span></label>
-          <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-            <option value="">-- เลือกประเภทองค์กร --</option>
-            ${Object.keys(orgOptionsMapping).map(type => `<option value="${type}">${type}</option>`).join('')}
-          </select>
+      <!-- ================= STEP 1: ข้อมูลผู้ประสานงาน ================= -->
+      <div id="step-1" class="block transition-all duration-300">
+        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 1: ข้อมูลผู้ประสานงาน</h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block font-semibold mb-1">1. ชื่อ-นามสกุลผู้ประสานงาน <span class="text-red-500">*</span></label>
+            <input type="text" id="inp-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">2. ประเภทองค์กรหรือหน่วยงาน <span class="text-red-500">*</span></label>
+              <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+                <option value="">-- เลือกประเภทองค์กร --</option>
+                ${Object.keys(orgOptionsMapping).map(type => `<option value="${type}">${type}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">3. ชื่อองค์กร หมู่บ้าน หรือหน่วยงาน <span class="text-red-500">*</span></label>
+              <select id="sel-org-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+                <option value="">-- กรุณาเลือกประเภทองค์กรก่อน --</option>
+              </select>
+            </div>
+          </div>
+          
+          <div id="div-other-org" class="hidden">
+            <label class="block font-semibold mb-1">4. ระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม <span class="text-red-500">*</span></label>
+            <input type="text" id="inp-other-org" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">5. เบอร์โทรศัพท์ผู้ประสานงาน <span class="text-red-500">*</span></label>
+              <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+              <p class="text-xs text-gray-400 mt-1">กรอกตัวเลขติดกันความยาว 9-10 หลัก (ไม่ต้องใส่เครื่องหมายขีด)</p>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">6. อีเมลผู้ประสานงาน (ถ้ามี)</label>
+              <input type="email" id="inp-email" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+            </div>
+          </div>
         </div>
-        
-        <div>
-          <label class="block font-semibold mb-1">3. ชื่อองค์กร หมู่บ้าน หรือหน่วยงาน <span class="text-red-500">*</span></label>
-          <select id="sel-org-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-            <option value="">-- กรุณาเลือกประเภทองค์กรก่อน --</option>
-          </select>
-        </div>
-      </div>
-      
-      <div id="div-other-org" class="hidden">
-        <label class="block font-semibold mb-1">4. ระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม <span class="text-red-500">*</span></label>
-        <input type="text" id="inp-other-org" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-      </div>
-      
-      <div class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block font-semibold mb-1">5. เบอร์โทรศัพท์ผู้ประสานงาน <span class="text-red-500">*</span></label>
-          <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-          <p class="text-xs text-gray-400 mt-1">กรอกตัวเลขติดกันความยาว 9-10 หลัก (ไม่ต้องใส่เครื่องหมายขีด)</p>
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">6. อีเมลผู้ประสานงาน (ถ้ามี)</label>
-          <input type="email" id="inp-email" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+        <div class="flex justify-end pt-6 mt-8 border-t border-gray-100">
+          <button type="button" onclick="validateAndNext(2)" class="bg-primary hover:bg-green-800 text-white font-title py-3 px-10 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>
         </div>
       </div>
 
-      <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mt-10 mb-6">ส่วนที่ 2: ความประสงค์เข้าร่วมกิจกรรม</h2>
-      
-      <div>
-        <label class="block font-semibold mb-3">7. หน่วยงานของท่านประสงค์เข้าร่วมกิจกรรมหรือไม่ <span class="text-red-500">*</span></label>
-        <div class="space-y-2">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="rad-intent" value="เข้าร่วมกิจกรรม" required onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-            <span>เข้าร่วมกิจกรรม</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="rad-intent" value="ยังไม่แน่ใจ" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-            <span>ยังไม่แน่ใจ</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="rad-intent" value="ไม่สามารถเข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-            <span>ไม่สามารถเข้าร่วมกิจกรรม</span>
-          </label>
+      <!-- ================= STEP 2: ความประสงค์เข้าร่วมกิจกรรม ================= -->
+      <div id="step-2" class="hidden transition-all duration-300">
+        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 2: ความประสงค์เข้าร่วมกิจกรรม</h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block font-semibold mb-3">7. หน่วยงานของท่านประสงค์เข้าร่วมกิจกรรมหรือไม่ <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="rad-intent" value="เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
+                <span>เข้าร่วมกิจกรรม</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="rad-intent" value="ยังไม่แน่ใจ" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
+                <span>ยังไม่แน่ใจ</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="rad-intent" value="ไม่สามารถเข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
+                <span>ไม่สามารถเข้าร่วมกิจกรรม</span>
+              </label>
+            </div>
+          </div>
+          <div id="dynamic-intent-section" class="mt-6"></div>
+        </div>
+
+        <div class="flex gap-4 pt-6 mt-8 border-t border-gray-100">
+          <button type="button" onclick="goToStep(1)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-xl transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
+          
+          <!-- ปุ่มฝั่งขวาจะแปรผันตามเงื่อนไข (ถัดไป หรือ ส่งข้อมูล) -->
+          <div id="step-2-actions" class="w-2/3 flex">
+            <button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>
+          </div>
         </div>
       </div>
 
-      <div id="dynamic-intent-section" class="mt-6"></div>
+      <!-- ================= STEP 3: จำนวนและรายชื่อผู้เข้าร่วม ================= -->
+      <div id="step-3" class="hidden transition-all duration-300">
+        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 3: จำนวนและรายชื่อผู้เข้าร่วม</h2>
+        <div class="space-y-6">
+          <div class="bg-green-50/50 border-2 border-dashed border-green-300 rounded-xl p-5">
+            <label class="block font-semibold text-lg text-primary mb-1">8. จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
+            <p class="text-sm text-gray-600 mb-4 font-semibold">กรุณาระบุจำนวนรวมผู้เข้าร่วมทั้งหมด รวมผู้ประสานงานด้วย หากผู้ประสานงานเข้าร่วมกิจกรรม (ขั้นต่ำ 1 คน, สูงสุด 50 คน)</p>
+            <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" class="w-full md:w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-primary outline-none font-bold text-lg text-center" placeholder="ระบุจำนวนคน">
+          </div>
+          
+          <div id="participants-list" class="space-y-4"></div>
+        </div>
 
-      <div class="flex gap-4 pt-6">
-        <button type="button" onclick="location.reload()" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-xl transition duration-200">ย้อนกลับ</button>
-        <button type="submit" class="w-2/3 bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200">ส่งข้อมูลแบบสำรวจ</button>
+        <div class="flex gap-4 pt-6 mt-8 border-t border-gray-100">
+          <button type="button" onclick="goToStep(2)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-xl transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
+          <button type="submit" class="w-2/3 bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>
+        </div>
       </div>
+
     </form>
   `;
 }
 
+function validateAndNext(targetStep) {
+  if (targetStep === 2) {
+    const name = document.getElementById("inp-name").value.trim();
+    const orgType = document.getElementById("sel-org-type").value;
+    const orgName = document.getElementById("sel-org-name").value;
+    const phone = document.getElementById("inp-phone").value.trim();
+    
+    if (!name || !orgType || !orgName || !phone) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกข้อมูลในช่องที่มีเครื่องหมาย * ให้ครบถ้วน' });
+    if (orgType === "อื่น ๆ" && !document.getElementById("inp-other-org").value.trim()) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม' });
+    if (!/^[0-9]{9,10}$/.test(phone)) return Swal.fire({ icon: 'error', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'กรุณากรอกตัวเลข 9-10 หลักโดยไม่มีขีด' });
+    
+    goToStep(2);
+  } 
+  else if (targetStep === 3) {
+    const intentCheck = document.querySelector('input[name="rad-intent"]:checked');
+    if (!intentCheck) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุความประสงค์เข้าร่วมกิจกรรม' });
+    
+    if (intentCheck.value === "เข้าร่วมกิจกรรม") {
+      goToStep(3);
+    }
+  }
+}
+
+function goToStep(step) {
+  window.scrollTo({ top: document.getElementById('view-form').offsetTop, behavior: 'smooth' });
+  document.getElementById("step-1").classList.add("hidden");
+  document.getElementById("step-2").classList.add("hidden");
+  document.getElementById("step-3").classList.add("hidden");
+  document.getElementById(`step-${step}`).classList.remove("hidden");
+}
+
+// =====================================================================
+// 3. DYNAMIC FORM HANDLERS
+// =====================================================================
 function handleOrgTypeChange(val) {
   const selOrgName = document.getElementById("sel-org-name");
   const divOtherOrg = document.getElementById("div-other-org");
   const inpOtherOrg = document.getElementById("inp-other-org");
-  
   selOrgName.innerHTML = "";
   
   if (!val) {
@@ -119,11 +184,9 @@ function handleOrgTypeChange(val) {
     return;
   }
   
-  const options = orgOptionsMapping[val] || [];
-  options.forEach(opt => {
+  (orgOptionsMapping[val] || []).forEach(opt => {
     const el = document.createElement("option");
-    el.value = opt;
-    el.textContent = opt;
+    el.value = opt; el.textContent = opt;
     selOrgName.appendChild(el);
   });
   
@@ -137,100 +200,105 @@ function handleOrgTypeChange(val) {
   }
 }
 
-let participantRowCount = 0;
 function handleIntentChange(val) {
   const container = document.getElementById("dynamic-intent-section");
+  const actionsContainer = document.getElementById("step-2-actions");
   container.innerHTML = "";
-  participantRowCount = 0;
 
   if (val === "เข้าร่วมกิจกรรม") {
-    container.innerHTML = `
-      <div class="border-2 border-dashed border-green-300 rounded-xl p-5 bg-green-50/50 space-y-4">
-        <div class="flex justify-between items-center">
-          <h3 class="font-title text-primary text-lg">รายชื่อผู้เข้าร่วมและรายละเอียดเสื้อ/อาหาร</h3>
-          <button type="button" onclick="addParticipantRow()" class="bg-secondary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-green-600 transition">+ เพิ่มรายชื่อ</button>
-        </div>
-        <div id="participants-list" class="space-y-4"></div>
-      </div>
-    `;
-    addParticipantRow(); 
-  } else if (val === "ยังไม่แน่ใจ") {
-    container.innerHTML = `
-      <div class="border-2 border-dashed border-yellow-300 rounded-xl p-5 bg-yellow-50/50">
-        <label class="block font-semibold mb-1">จำนวนผู้เข้าร่วมโดยประมาณ (ท่าน) <span class="text-red-500">*</span></label>
-        <input type="number" id="inp-est-part" min="1" required class="w-full md:w-1/3 p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
-      </div>
-    `;
-  } else if (val === "ไม่สามารถเข้าร่วมกิจกรรม") {
-    container.innerHTML = `
-      <div class="border-2 border-dashed border-red-300 rounded-xl p-5 bg-red-50/50">
-        <label class="block font-semibold mb-1">เหตุผลหรือข้อเสนอแนะเพิ่มเติม</label>
-        <textarea id="txt-feedback" rows="3" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="ระบุเหตุผล หรือข้อคิดเห็นเพิ่มเติมที่นี่..."></textarea>
-      </div>
-    `;
+    // เปลี่ยนปุ่มเป็น ถัดไป เพื่อเข้าสู่ Step 3
+    actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>`;
+  } else {
+    // เปลี่ยนปุ่มเป็น ส่งข้อมูล 
+    actionsContainer.innerHTML = `<button type="submit" class="w-full bg-secondary hover:bg-green-600 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
+    
+    if (val === "ยังไม่แน่ใจ") {
+      container.innerHTML = `
+        <div class="border-2 border-dashed border-yellow-300 rounded-xl p-5 bg-yellow-50/50">
+          <label class="block font-semibold mb-1">จำนวนผู้เข้าร่วมโดยประมาณ (ท่าน) <span class="text-red-500">*</span></label>
+          <input type="number" id="inp-est-part" min="1" required class="w-full md:w-1/3 p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+        </div>`;
+    } else if (val === "ไม่สามารถเข้าร่วมกิจกรรม") {
+      container.innerHTML = `
+        <div class="border-2 border-dashed border-red-300 rounded-xl p-5 bg-red-50/50">
+          <label class="block font-semibold mb-1">เหตุผลหรือข้อเสนอแนะเพิ่มเติม</label>
+          <textarea id="txt-feedback" rows="3" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="ระบุเหตุผล หรือข้อคิดเห็นเพิ่มเติมที่นี่..."></textarea>
+        </div>`;
+    }
   }
 }
 
-function addParticipantRow() {
-  participantRowCount++;
+function generateParticipantRows(countStr) {
   const list = document.getElementById("participants-list");
-  const row = document.createElement("div");
-  row.id = `part-row-${participantRowCount}`;
-  row.className = "grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-4 border rounded-xl shadow-sm relative";
+  list.innerHTML = ""; 
   
-  row.innerHTML = `
-    <div class="md:col-span-2">
-      <label class="block text-xs font-semibold text-gray-500 mb-1">ชื่อ-นามสกุลผู้ร่วมเดินทาง *</label>
-      <input type="text" name="part-name" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary">
-    </div>
-    <div>
-      <label class="block text-xs font-semibold text-gray-500 mb-1">ขนาดเสื้อ *</label>
-      <select name="part-shirt" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary">
-        <option value="S">S (รอบอก 36")</option>
-        <option value="M">M (รอบอก 38")</option>
-        <option value="L">L (รอบอก 40")</option>
-        <option value="XL">XL (รอบอก 42")</option>
-        <option value="2XL">2XL (รอบอก 44")</option>
-        <option value="3XL">3XL (รอบอก 46")</option>
-      </select>
-    </div>
-    <div>
-      <label class="block text-xs font-semibold text-gray-500 mb-1">ข้อจำกัดอาหาร/ข้อมูลสุขภาพ</label>
-      <input type="text" name="part-health" placeholder="เช่น มังสวิรัติ, แพ้กุ้ง (ถ้าไม่มีเว้นว่าง)" class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary">
-    </div>
-    ${participantRowCount > 1 ? `<button type="button" onclick="removeParticipantRow(${participantRowCount})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold">✕ ลบ</button>` : ''}
-  `;
-  list.appendChild(row);
-}
+  let count = parseInt(countStr);
+  if (isNaN(count) || count < 1) return;
+  if (count > 50) {
+    Swal.fire({ icon: 'warning', title: 'จำนวนเกินขีดจำกัด', text: 'สามารถลงทะเบียนได้สูงสุด 50 ท่านต่อองค์กร' });
+    document.getElementById("inp-total-part").value = 50;
+    count = 50;
+  }
 
-function removeParticipantRow(id) {
-  document.getElementById(`part-row-${id}`).remove();
+  for (let i = 1; i <= count; i++) {
+    const row = document.createElement("div");
+    row.className = "grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-5 border-2 border-gray-100 rounded-xl shadow-sm relative";
+    row.innerHTML = `
+      <div class="absolute -top-3 -left-3 bg-primary text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shadow">${i}</div>
+      <div class="md:col-span-2 pl-4 md:pl-2">
+        <label class="block text-xs font-semibold text-gray-500 mb-1">ชื่อ-นามสกุลผู้ร่วมเดินทาง <span class="text-red-500">*</span></label>
+        <input type="text" name="part-name" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-gray-500 mb-1">ขนาดเสื้อ <span class="text-red-500">*</span></label>
+        <select name="part-shirt" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+          <option value="S">S (รอบอก 36")</option>
+          <option value="M">M (รอบอก 38")</option>
+          <option value="L">L (รอบอก 40")</option>
+          <option value="XL">XL (รอบอก 42")</option>
+          <option value="2XL">2XL (รอบอก 44")</option>
+          <option value="3XL">3XL (รอบอก 46")</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-gray-500 mb-1">ข้อจำกัดอาหาร</label>
+        <input type="text" name="part-health" placeholder="เช่น มังสวิรัติ, แพ้กุ้ง" class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+      </div>
+    `;
+    list.appendChild(row);
+  }
 }
 
 // =====================================================================
-// 3. DATA SUBMISSION & VALIDATION
+// 4. DATA SUBMISSION & VALIDATION
 // =====================================================================
 function submitSurvey(e) {
   e.preventDefault();
   
-  const phone = document.getElementById("inp-phone").value.trim();
-  const phoneRegex = /^[0-9]{9,10}$/;
-  if (!phoneRegex.test(phone)) {
-    Swal.fire({ icon: 'error', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'กรุณากรอกเฉพาะตัวเลขความยาว 9 ถึง 10 หลักโดยไม่มีขีดเครื่องหมาย' });
-    return;
-  }
+  const intentCheck = document.querySelector('input[name="rad-intent"]:checked');
+  if(!intentCheck) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุความประสงค์เข้าร่วมกิจกรรม' });
   
+  const intent = intentCheck.value;
+  let totalPart = 0;
+
+  if (intent === "เข้าร่วมกิจกรรม") {
+    totalPart = parseInt(document.getElementById("inp-total-part").value);
+    if (isNaN(totalPart) || totalPart < 1 || totalPart > 50) {
+      return Swal.fire({ icon: 'error', title: 'ข้อมูลจำนวนไม่ถูกต้อง', text: 'กรุณาระบุจำนวนผู้เข้าร่วม (1-50 คน)' });
+    }
+  }
+
   Swal.fire({ title: 'กำลังบันทึกข้อมูล...', text: 'กรุณารอสักครู่ระบบกำลังประมวลผล', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
-  const intent = document.querySelector('input[name="rad-intent"]:checked').value;
   const payload = {
     fullName: document.getElementById("inp-name").value.trim(),
     orgType: document.getElementById("sel-org-type").value,
     orgName: document.getElementById("sel-org-name").value,
     otherOrgName: document.getElementById("inp-other-org") ? document.getElementById("inp-other-org").value.trim() : "",
-    phone: phone,
+    phone: document.getElementById("inp-phone").value.trim(),
     email: document.getElementById("inp-email").value.trim(),
     intent: intent,
+    totalParticipants: totalPart, 
     estParticipants: document.getElementById("inp-est-part") ? document.getElementById("inp-est-part").value : 0,
     feedback: document.getElementById("txt-feedback") ? document.getElementById("txt-feedback").value.trim() : "",
     participants: []
@@ -242,8 +310,7 @@ function submitSurvey(e) {
       const name = row.querySelector('input[name="part-name"]').value.trim();
       const shirtSize = row.querySelector('select[name="part-shirt"]').value;
       const healthInfo = row.querySelector('input[name="part-health"]').value.trim();
-      
-      payload.participants.push({ name, shirtSize, foodLimit: healthInfo, healthInfo });
+      payload.participants.push({ name, shirtSize, healthInfo });
     }
   }
 
@@ -251,7 +318,7 @@ function submitSurvey(e) {
     method: "POST",
     mode: "no-cors", 
     cache: "no-cache",
-    headers: { "Content-Type": "text/plain;charset=utf-8" }, // แก้จาก application/json เพื่อป้องกัน CORS Preflight ที่เคร่งครัด
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   })
   .then(() => {
@@ -264,7 +331,7 @@ function submitSurvey(e) {
 }
 
 // =====================================================================
-// 4. ADMIN DASHBOARD LOGIC
+// 5. ADMIN DASHBOARD LOGIC
 // =====================================================================
 function handleAdminLogin() {
   const u = document.getElementById("admin-user").value;
@@ -306,7 +373,6 @@ function loadAdminDashboard() {
     </div>
   `;
 
-  // ดึงข้อมูลจาก GAS สำหรับแสดงสถิติ
   fetch(GAS_API_URL)
     .then(res => res.json())
     .then(res => {
