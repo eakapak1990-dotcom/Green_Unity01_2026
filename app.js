@@ -492,26 +492,42 @@ function loadAdminDashboard() {
   const adminView = document.getElementById("view-admin");
   
   adminView.innerHTML = `
-    <div class="flex h-screen w-full bg-gray-50 overflow-hidden text-sm md:text-base">
+    <div class="flex flex-col md:flex-row h-screen w-full bg-gray-50 overflow-hidden text-sm md:text-base relative">
       
+      <!-- MOBILE HEADER (แสดงเฉพาะหน้าจอมือถือ) -->
+      <div class="md:hidden flex items-center justify-between bg-[#173B1A] text-white p-4 shadow-md z-20">
+         <h1 class="font-title font-bold text-lg">Green Unity 2026</h1>
+         <button onclick="toggleSidebar()" class="p-2 focus:outline-none hover:bg-white/10 rounded-lg transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+         </button>
+      </div>
+
+      <!-- SIDEBAR BACKDROP OVERLAY (พื้นหลังมืดๆ ตอนเปิดเมนูในมือถือ) -->
+      <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden transition-opacity"></div>
+
       <!-- SIDEBAR -->
-      <aside class="w-64 bg-[#173B1A] text-white flex flex-col shadow-xl z-10 shrink-0">
-        <div class="p-6 border-b border-white/10">
-          <h1 class="text-xl font-title font-bold text-secondary tracking-wide">Admin Panel</h1>
-          <p class="text-xs text-gray-300 mt-1">Green Unity 2026</p>
+      <aside id="admin-sidebar" class="w-64 bg-[#173B1A] text-white flex flex-col shadow-2xl z-40 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out shrink-0 h-full">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-title font-bold text-secondary tracking-wide">Admin Panel</h1>
+            <p class="text-xs text-gray-300 mt-1">Green Unity 2026</p>
+          </div>
+          <!-- ปุ่มปิด Sidebar ในมือถือ -->
+          <button onclick="toggleSidebar()" class="md:hidden text-gray-300 hover:text-white p-1">
+             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-          <button onclick="switchTab('overview')" class="tab-btn w-full text-left py-3 px-4 bg-primary rounded-xl font-semibold transition flex items-center gap-3">
+          <button onclick="switchTab('overview'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 bg-primary rounded-xl font-semibold transition flex items-center gap-3">
             <span>📊</span> ภาพรวมและสถิติ
           </button>
-          <button onclick="switchTab('logistics')" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
+          <button onclick="switchTab('logistics'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
             <span>👕</span> เสื้อและอาหาร
           </button>
-          <button onclick="switchTab('demographics')" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
+          <button onclick="switchTab('demographics'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
             <span>👥</span> ข้อมูลผู้เข้าร่วม
           </button>
-          <!-- TAB ใหม่: ตารางรายชื่อ -->
-          <button onclick="switchTab('datatable')" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
+          <button onclick="switchTab('datatable'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
             <span>📇</span> ค้นหารายชื่อ
           </button>
         </nav>
@@ -521,7 +537,7 @@ function loadAdminDashboard() {
       </aside>
 
       <!-- MAIN CONTENT -->
-      <main class="flex-1 overflow-y-auto p-6 md:p-10 relative">
+      <main class="flex-1 overflow-y-auto p-4 md:p-10 relative">
         <h2 class="text-2xl md:text-3xl font-title font-bold text-gray-800 mb-6">แดชบอร์ดสรุปผลการสำรวจ</h2>
         
         <!-- TOP SUMMARY CARDS -->
@@ -755,4 +771,25 @@ window.toggleDetail = function(id) {
    const el = document.getElementById(id);
    if (el.classList.contains("hidden")) el.classList.remove("hidden");
    else el.classList.add("hidden");
+};
+
+// =====================================================================
+// ฟังก์ชันสำหรับเปิด-ปิด Sidebar บนจอมือถือ
+// =====================================================================
+window.toggleSidebar = function() {
+   const sidebar = document.getElementById("admin-sidebar");
+   const overlay = document.getElementById("sidebar-overlay");
+   
+   // เช็กว่าถ้าเปิดบนจอใหญ่ (Desktop) ไม่ต้องทำงาน
+   if (window.innerWidth >= 768) return; 
+
+   if (sidebar.classList.contains("-translate-x-full")) {
+       // เปิดเมนู
+       sidebar.classList.remove("-translate-x-full");
+       overlay.classList.remove("hidden");
+   } else {
+       // ปิดเมนู
+       sidebar.classList.add("-translate-x-full");
+       overlay.classList.add("hidden");
+   }
 };
