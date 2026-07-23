@@ -30,105 +30,114 @@ function handleStartSurvey() {
   renderSurveyForm();
 }
 
+function goBackToLanding() {
+  document.getElementById("view-form").classList.add("hidden");
+  document.getElementById("view-landing").classList.remove("hidden");
+}
+
 function renderSurveyForm() {
-  const formContainer = document.querySelector("#view-form > div");
+  // เล็งไปที่ .form-preview เพื่อวาด HTML ใหม่ด้วยดีไซน์ที่ตรงกับ style.css
+  const formContainer = document.querySelector("#view-form .form-preview");
+  
   formContainer.innerHTML = `
-    <form id="main-survey-form" onsubmit="submitSurvey(event)" class="space-y-6">
+    <span class="back-link" onclick="goBackToLanding()">← ย้อนกลับ</span>
+    <h2>ข้อมูลการลงทะเบียน</h2>
+    
+    <form id="main-survey-form" onsubmit="submitSurvey(event)">
       
       <!-- ================= STEP 1: ข้อมูลผู้ประสานงาน ================= -->
-      <div id="step-1" class="block transition-all duration-300">
-        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 1: ข้อมูลผู้ประสานงาน</h2>
-        <div class="space-y-6">
-          <div>
-            <label class="block font-semibold mb-1">1. ชื่อ-นามสกุลผู้ประสานงาน <span class="text-red-500">*</span></label>
-            <input type="text" id="inp-name" required class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
+      <div id="step-1" class="fade-in">
+        <div class="step-title">ส่วนที่ 1: ข้อมูลผู้ประสานงาน</div>
+        
+        <div class="field">
+          <label>1. ชื่อ-นามสกุลผู้ประสานงาน <span class="text-red-500">*</span></label>
+          <input type="text" id="inp-name" required placeholder="ระบุชื่อ-นามสกุล">
+        </div>
+        
+        <div class="row2">
+          <div class="field">
+            <label>2. ประเภทองค์กรหรือหน่วยงาน <span class="text-red-500">*</span></label>
+            <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-[13px] border border-[#EDE3CC] rounded-xl focus:ring-2 focus:ring-[#66BB6A] outline-none bg-white">
+              <option value="">-- เลือกประเภทองค์กร --</option>
+              ${Object.keys(orgOptionsMapping).map(type => `<option value="${type}">${type}</option>`).join('')}
+            </select>
           </div>
-          
-          <div class="grid md:grid-cols-2 gap-4">
-            <div>
-              <label class="block font-semibold mb-1">2. ประเภทองค์กรหรือหน่วยงาน <span class="text-red-500">*</span></label>
-              <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-                <option value="">-- เลือกประเภทองค์กร --</option>
-                ${Object.keys(orgOptionsMapping).map(type => `<option value="${type}">${type}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">3. ชื่อองค์กร หมู่บ้าน หรือหน่วยงาน <span class="text-red-500">*</span></label>
-              <select id="sel-org-name" required class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-                <option value="">-- กรุณาเลือกประเภทองค์กรก่อน --</option>
-              </select>
-            </div>
-          </div>
-          
-          <div id="div-other-org" class="hidden">
-            <label class="block font-semibold mb-1">4. ระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม <span class="text-red-500">*</span></label>
-            <input type="text" id="inp-other-org" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-          </div>
-          
-          <div class="grid md:grid-cols-2 gap-4">
-            <div>
-              <label class="block font-semibold mb-1">5. เบอร์โทรศัพท์ผู้ประสานงาน <span class="text-red-500">*</span></label>
-              <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-              <p class="text-xs text-gray-400 mt-1">กรอกตัวเลขติดกันความยาว 9-10 หลัก (ไม่ต้องใส่เครื่องหมายขีด)</p>
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">6. อีเมลผู้ประสานงาน (ถ้ามี)</label>
-              <input type="email" id="inp-email" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-            </div>
+          <div class="field">
+            <label>3. ชื่อองค์กร หมู่บ้าน หรือหน่วยงาน <span class="text-red-500">*</span></label>
+            <select id="sel-org-name" required class="w-full p-[13px] border border-[#EDE3CC] rounded-xl focus:ring-2 focus:ring-[#66BB6A] outline-none bg-white">
+              <option value="">-- กรุณาเลือกประเภทองค์กรก่อน --</option>
+            </select>
           </div>
         </div>
-        <div class="flex justify-end pt-6 mt-8 border-t border-creamLine">
-          <button type="button" onclick="validateAndNext(2)" class="bg-primary hover:bg-primaryDark text-white font-title py-3 px-10 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>
+        
+        <div id="div-other-org" class="field hidden">
+          <label>4. ระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม <span class="text-red-500">*</span></label>
+          <input type="text" id="inp-other-org" placeholder="โปรดระบุ">
+        </div>
+        
+        <div class="row2">
+          <div class="field">
+            <label>5. เบอร์โทรศัพท์ผู้ประสานงาน <span class="text-red-500">*</span></label>
+            <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678">
+            <p class="text-xs text-gray-500 mt-1">กรอกตัวเลขติดกัน 9-10 หลัก (ไม่ต้องมีขีด)</p>
+          </div>
+          <div class="field">
+            <label>6. อีเมลผู้ประสานงาน (ถ้ามี)</label>
+            <input type="email" id="inp-email" placeholder="example@email.com">
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <button type="button" onclick="validateAndNext(2)" class="btn btn-primary">ถัดไป ➔</button>
         </div>
       </div>
 
       <!-- ================= STEP 2: ความประสงค์เข้าร่วมกิจกรรม ================= -->
-      <div id="step-2" class="hidden transition-all duration-300">
-        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 2: ความประสงค์เข้าร่วมกิจกรรม</h2>
-        <div class="space-y-6">
-          <div>
-            <label class="block font-semibold mb-3">7. หน่วยงานของท่านประสงค์เข้าร่วมกิจกรรมหรือไม่ <span class="text-red-500">*</span></label>
-            <div class="space-y-2">
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="rad-intent" value="เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-                <span>เข้าร่วมกิจกรรม</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="rad-intent" value="ไม่เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-                <span>ไม่เข้าร่วมกิจกรรม</span>
-              </label>
-            </div>
+      <div id="step-2" class="hidden fade-in">
+        <div class="step-title">ส่วนที่ 2: ความประสงค์เข้าร่วมกิจกรรม</div>
+        
+        <div class="field">
+          <label>7. หน่วยงานของท่านประสงค์เข้าร่วมกิจกรรมหรือไม่ <span class="text-red-500">*</span></label>
+          <div class="radio-group" style="flex-direction: column; gap: 12px;">
+            <label>
+              <input type="radio" name="rad-intent" value="เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)">
+              เข้าร่วมกิจกรรม
+            </label>
+            <label>
+              <input type="radio" name="rad-intent" value="ไม่เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)">
+              ไม่เข้าร่วมกิจกรรม
+            </label>
           </div>
-          <div id="dynamic-intent-section" class="mt-6"></div>
         </div>
 
-        <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
-          <button type="button" onclick="goToStep(1)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-full transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
-          
-          <div id="step-2-actions" class="w-2/3 flex">
-            <button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>
+        <div id="dynamic-intent-section" style="margin-top:24px;"></div>
+
+        <div class="row2" style="margin-top: 32px;">
+          <button type="button" onclick="goToStep(1)" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">← ย้อนกลับ</button>
+          <div id="step-2-actions">
+             <button type="button" onclick="validateAndNext(3)" class="btn btn-primary">ถัดไป ➔</button>
           </div>
         </div>
       </div>
 
       <!-- ================= STEP 3: จำนวนและรายชื่อผู้เข้าร่วม ================= -->
-      <div id="step-3" class="hidden transition-all duration-300">
-        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 3: รายละเอียดผู้เข้าร่วม</h2>
-        <div class="space-y-6">
-          <div class="bg-pale/60 border-2 border-dashed border-secondary rounded-xl p-5">
-            <label class="block font-semibold text-lg text-primary mb-1">8. จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
-            <p class="text-sm text-gray-600 mb-4 font-semibold">กรุณาระบุจำนวนรวมผู้เข้าร่วมทั้งหมด รวมผู้ประสานงานด้วย หากผู้ประสานงานเข้าร่วมกิจกรรม (ขั้นต่ำ 1 คน, สูงสุด 50 คน)</p>
-            <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" class="w-full md:w-1/3 p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none font-bold text-lg text-center" placeholder="ระบุจำนวนคน" required>
+      <div id="step-3" class="hidden fade-in">
+        <div class="step-title">ส่วนที่ 3: รายละเอียดผู้เข้าร่วม</div>
+        
+        <div style="background: var(--pale); border: 2px dashed var(--secondary); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:16px; color:var(--primary);">8. จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
+            <p class="text-sm text-gray-600 mb-3">กรุณาระบุจำนวนรวมผู้เข้าร่วมทั้งหมด รวมผู้ประสานงานด้วย (1 - 50 คน)</p>
+            <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" placeholder="ระบุจำนวนคน" required style="max-width: 200px; text-align: center; font-weight: bold;">
           </div>
-          
-          <!-- รายชื่อผู้เข้าร่วม (Dynamic Container) -->
-          <div id="participants-list" class="space-y-4"></div>
-
         </div>
+        
+        <!-- รายชื่อผู้เข้าร่วม (Dynamic Container) -->
+        <div id="participants-list"></div>
 
-        <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
-          <button type="button" onclick="goToStep(2)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-full transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
-          <button type="submit" class="w-2/3 bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>
+        <div class="row2" style="margin-top: 40px;">
+          <button type="button" onclick="goToStep(2)" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">← ย้อนกลับ</button>
+          <button type="submit" class="btn btn-primary">ส่งข้อมูลแบบสำรวจ</button>
         </div>
       </div>
 
@@ -153,9 +162,7 @@ function validateAndNext(targetStep) {
     const intentCheck = document.querySelector('input[name="rad-intent"]:checked');
     if (!intentCheck) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุความประสงค์เข้าร่วมกิจกรรม' });
     
-    if (intentCheck.value === "เข้าร่วมกิจกรรม") {
-      goToStep(3);
-    }
+    if (intentCheck.value === "เข้าร่วมกิจกรรม") goToStep(3);
   }
 }
 
@@ -205,14 +212,13 @@ function handleIntentChange(val) {
   container.innerHTML = "";
 
   if (val === "เข้าร่วมกิจกรรม") {
-    actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>`;
+    actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="btn btn-primary">ถัดไป ➔</button>`;
   } else {
-    actionsContainer.innerHTML = `<button type="button" onclick="submitSurvey(event)" class="w-full bg-secondary hover:bg-primary text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
+    actionsContainer.innerHTML = `<button type="button" onclick="submitSurvey(event)" class="btn" style="background:var(--forest); color:#fff;">ส่งข้อมูลแบบสำรวจ</button>`;
   }
 }
 
 document.addEventListener('change', (e) => {
-    // Handler สำหรับข้อจำกัดด้านอาหาร
     if (e.target.classList.contains('diet-select')) {
         const val = e.target.value;
         const index = e.target.getAttribute('data-index');
@@ -247,18 +253,21 @@ function generateParticipantRows(countStr) {
 
   for (let i = 1; i <= count; i++) {
     const row = document.createElement("div");
-    row.className = "participant-row p-4 mb-4 border border-gray-200 rounded-xl bg-white shadow-sm transition-all hover:shadow-md relative";
+    row.className = "participant-row fade-in";
+    row.style.cssText = "background: #fff; border: 1px solid var(--cream-line); border-radius: 16px; padding: 24px; margin-bottom: 20px; position: relative;";
+    
     row.innerHTML = `
-      <div class="absolute -top-3 -left-3 bg-primary text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shadow">${i}</div>
-      <h4 class="font-bold text-primary mb-3 pb-2 border-b border-gray-100 flex items-center gap-2 pl-6">ผู้เข้าร่วมคนที่ ${i}</h4>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">9. ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
-              <input type="text" name="part-name" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none" required placeholder="ระบุชื่อ-นามสกุล">
+      <div style="position: absolute; top: -14px; left: -14px; background: var(--primary); color: #fff; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-family: 'Prompt', sans-serif; box-shadow: var(--shadow-soft);">${i}</div>
+      <h4 style="color: var(--primary); margin: 0 0 16px; border-bottom: 1px solid var(--cream-line); padding-bottom: 12px; font-weight: 700;">ผู้เข้าร่วมคนที่ ${i}</h4>
+      
+      <div class="row2">
+          <div class="field">
+              <label>9. ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
+              <input type="text" name="part-name" required placeholder="ระบุชื่อ-นามสกุล">
           </div>
-          <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">10. ขนาดเสื้อ <span class="text-red-500">*</span></label>
-              <select name="part-shirt" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white" required>
+          <div class="field">
+              <label>10. ขนาดเสื้อ <span class="text-red-500">*</span></label>
+              <select name="part-shirt" required class="w-full p-[13px] border border-[#EDE3CC] rounded-xl focus:ring-2 focus:ring-[#66BB6A] outline-none bg-white">
                   <option value="" disabled selected>-- เลือกขนาด --</option>
                   <option value="XS">XS</option>
                   <option value="S">S</option>
@@ -272,21 +281,21 @@ function generateParticipantRows(countStr) {
                   <option value="ไม่รับเสื้อ">ไม่รับเสื้อ</option>
               </select>
           </div>
-          <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">11. ข้อจำกัดด้านอาหาร <span class="text-red-500">*</span></label>
-              <select name="part-diet" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white diet-select" data-index="${i}" required>
-                  <option value="" disabled selected>-- เลือกข้อมูล --</option>
-                  <option value="ไม่มี">ไม่มี</option>
-                  <option value="แพ้อาหารทะเล">แพ้อาหารทะเล</option>
-                  <option value="อื่นๆ">อื่น ๆ</option>
-              </select>
-          </div>
+      </div>
+      
+      <div class="field">
+          <label>11. ข้อจำกัดด้านอาหาร <span class="text-red-500">*</span></label>
+          <select name="part-diet" class="w-full p-[13px] border border-[#EDE3CC] rounded-xl focus:ring-2 focus:ring-[#66BB6A] outline-none bg-white diet-select" data-index="${i}" required>
+              <option value="" disabled selected>-- เลือกข้อมูล --</option>
+              <option value="ไม่มี">ไม่มี</option>
+              <option value="แพ้อาหารทะเล">แพ้อาหารทะเล</option>
+              <option value="อื่นๆ">อื่น ๆ</option>
+          </select>
+      </div>
 
-          <!-- กล่องรายละเอียดอาหาร -->
-          <div id="diet_detail_container_${i}" class="col-span-1 md:col-span-2 hidden bg-red-50 p-3 rounded-lg border border-red-100">
-              <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดเพิ่มเติมเกี่ยวกับอาหาร <span class="text-red-500">*</span></label>
-              <input type="text" name="part-diet-detail" id="p_diet_detail_${i}" class="w-full border border-red-200 p-2.5 rounded-lg focus:ring-2 focus:ring-red-400 outline-none" placeholder="ตัวอย่าง: แพ้กุ้งและปู, ไม่รับประทานเนื้อวัว">
-          </div>
+      <div id="diet_detail_container_${i}" class="field hidden" style="background:#FDECEC; padding:16px; border-radius:12px; border:1px solid #F6D4D4;">
+          <label style="color:#C0392B;">รายละเอียดเพิ่มเติมเกี่ยวกับอาหาร <span class="text-red-500">*</span></label>
+          <input type="text" name="part-diet-detail" id="p_diet_detail_${i}" placeholder="ตัวอย่าง: แพ้กุ้งและปู, ไม่รับประทานเนื้อวัว" style="border-color:#F6D4D4;">
       </div>
     `;
     list.appendChild(row);
@@ -346,7 +355,7 @@ function executeDataSubmission(intent, totalPart) {
       estParticipants: document.getElementById("inp-est-part") ? document.getElementById("inp-est-part").value : 0,
       feedback: document.getElementById("txt-feedback") ? document.getElementById("txt-feedback").value.trim() : "",
       participants: [],
-      health_safety: {} // ส่งกลับไปเป็นอ็อบเจ็กต์ว่าง เพื่อรองรับ Backward Compatibility
+      health_safety: {}
     };
   
     if (intent === "เข้าร่วมกิจกรรม") {
@@ -357,7 +366,7 @@ function executeDataSubmission(intent, totalPart) {
         const name = row.querySelector('input[name="part-name"]').value.trim();
         const shirtSize = row.querySelector('select[name="part-shirt"]').value;
         const diet = row.querySelector('select[name="part-diet"]').value;
-        const dietDetail = row.querySelector('input[name="part-diet-detail"]').value.trim();
+        const dietDetail = row.querySelector('input[name="part-diet-detail"]') ? row.querySelector('input[name="part-diet-detail"]').value.trim() : "";
         
         payload.participants.push({ name, shirtSize, diet, dietDetail });
         pIndex++;
@@ -375,7 +384,7 @@ function executeDataSubmission(intent, totalPart) {
       Swal.fire({ 
           icon: 'success', 
           title: 'ลงทะเบียนสำเร็จ', 
-          html: `ขอขอบคุณที่ให้ความร่วมมือตอบแบบสำรวจ Green Unity 2026<br><br><span class="text-green-600 font-bold">ระบบได้บันทึกข้อมูลของท่านเรียบร้อยแล้ว</span>`, 
+          html: `ขอขอบคุณที่ให้ความร่วมมือตอบแบบสำรวจ Green Unity 2026<br><br><span style="color:var(--primary); font-weight:bold;">ระบบได้บันทึกข้อมูลของท่านเรียบร้อยแล้ว</span>`, 
           confirmButtonColor: '#2E7D32' 
       }).then(() => location.reload());
     })
@@ -406,138 +415,107 @@ function handleAdminLogin() {
   }
 }
 
+function logoutAdmin() {
+  location.reload();
+}
+
 function loadAdminDashboard() {
-  const adminView = document.getElementById("view-admin");
+  // เล็งเป้าหมายไปที่ #admin-content ที่อยู่ใน index.html เพื่อป้องกันไม่ให้ทับ .form-preview
+  const adminContent = document.getElementById("admin-content");
   
-  adminView.innerHTML = `
-    <div class="flex flex-col md:flex-row h-screen w-full bg-gray-50 overflow-hidden text-sm md:text-base relative">
+  adminContent.innerHTML = `
+    <!-- เมนู Tab ด้านบน แทนที่ Sidebar แบบเดิม -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8 border-b border-gray-200 pb-4">
+       <button onclick="switchTab('overview')" class="tab-btn bg-green-700 text-white px-5 py-2.5 rounded-full font-bold transition shadow-sm text-sm md:text-base">📊 ภาพรวม</button>
+       <button onclick="switchTab('logistics')" class="tab-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2.5 rounded-full font-bold transition text-sm md:text-base">👕 เสื้อและอาหาร</button>
+       <button onclick="switchTab('datatable')" class="tab-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2.5 rounded-full font-bold transition text-sm md:text-base">📇 ค้นหารายชื่อ</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="text-left">
       
-      <!-- MOBILE HEADER -->
-      <div class="md:hidden flex items-center justify-between bg-[#173B1A] text-white p-4 shadow-md z-20">
-         <h1 class="font-title font-bold text-lg">Green Unity 2026</h1>
-         <button onclick="toggleSidebar()" class="p-2 focus:outline-none hover:bg-white/10 rounded-lg transition">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-         </button>
+      <!-- STATS BOXES -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+           <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">หน่วยงานร่วมใจ</span>
+           <span class="text-3xl font-bold text-green-700 mt-2" id="stat-orgs">0</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+           <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">รวมผู้เข้าร่วม</span>
+           <span class="text-3xl font-bold text-blue-600 mt-2" id="stat-parts">0</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+           <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">ยอดผลิตเสื้อ</span>
+           <span class="text-3xl font-bold text-green-500 mt-2" id="stat-shirts">0</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+           <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">ข้อจำกัดอาหาร</span>
+           <span class="text-3xl font-bold text-red-500 mt-2" id="stat-food">0</span>
+        </div>
       </div>
 
-      <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden transition-opacity"></div>
-
-      <!-- SIDEBAR -->
-      <aside id="admin-sidebar" class="w-64 bg-[#173B1A] text-white flex flex-col shadow-2xl z-40 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out shrink-0 h-full">
-        <div class="p-6 border-b border-white/10 flex justify-between items-center">
-          <div>
-            <h1 class="text-xl font-title font-bold text-secondary tracking-wide">Admin Panel</h1>
-            <p class="text-xs text-gray-300 mt-1">Green Unity 2026</p>
+      <!-- TAB: ภาพรวม -->
+      <div id="tab-overview" class="tab-content fade-in space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-title font-bold text-gray-700 mb-4 text-center">ความประสงค์เข้าร่วมกิจกรรม</h3>
+            <div class="h-64 flex justify-center"><canvas id="intentChart"></canvas></div>
           </div>
-          <button onclick="toggleSidebar()" class="md:hidden text-gray-300 hover:text-white p-1">
-             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-          <button onclick="switchTab('overview'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 bg-primary rounded-xl font-semibold transition flex items-center gap-3">
-            <span>📊</span> ภาพรวมและสถิติ
-          </button>
-          <button onclick="switchTab('logistics'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
-            <span>👕</span> เสื้อและอาหาร
-          </button>
-          <!-- ลบแท็บข้อมูลผู้เข้าร่วมออกตามที่ร้องขอ -->
-          <button onclick="switchTab('datatable'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
-            <span>📇</span> ค้นหารายชื่อ
-          </button>
-        </nav>
-        <div class="p-4 border-t border-white/10">
-          <button onclick="location.reload()" class="w-full text-center py-2.5 bg-red-600 hover:bg-red-700 rounded-lg text-sm font-bold transition">ออกจากระบบ</button>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTENT -->
-      <main class="flex-1 overflow-y-auto p-4 md:p-10 relative">
-        <h2 class="text-2xl md:text-3xl font-title font-bold text-gray-800 mb-6">แดชบอร์ดสรุปผลการสำรวจ</h2>
-        
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">หน่วยงานร่วมใจ</span>
-             <span class="text-3xl font-bold text-primary mt-2" id="stat-orgs">0</span>
-          </div>
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">รวมผู้เข้าร่วม</span>
-             <span class="text-3xl font-bold text-blue-600 mt-2" id="stat-parts">0</span>
-          </div>
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">ยอดผลิตเสื้อ</span>
-             <span class="text-3xl font-bold text-secondary mt-2" id="stat-shirts">0</span>
-          </div>
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">ข้อจำกัดอาหาร</span>
-             <span class="text-3xl font-bold text-red-500 mt-2" id="stat-food">0</span>
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สัดส่วนประเภทหน่วยงาน</h3>
+            <div class="h-64 relative w-full"><canvas id="orgChart"></canvas></div>
           </div>
         </div>
+      </div>
+      
+      <!-- TAB: โลจิสติกส์ -->
+      <div id="tab-logistics" class="tab-content hidden fade-in space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สรุปจำนวนเสื้อแยกตามไซซ์</h3>
+            <div class="h-64 relative w-full"><canvas id="shirtChart"></canvas></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-title font-bold text-gray-700 mb-4 text-center">ข้อจำกัดด้านอาหาร</h3>
+            <div class="h-64 flex justify-center"><canvas id="foodChart"></canvas></div>
+          </div>
+        </div>
+      </div>
 
-        <div id="tab-overview" class="tab-content space-y-6">
-          <div class="grid lg:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h3 class="font-title font-bold text-gray-700 mb-4 text-center">ความประสงค์เข้าร่วมกิจกรรม</h3>
-              <div class="h-64 flex justify-center"><canvas id="intentChart"></canvas></div>
+      <!-- TAB: ตารางรายชื่อ -->
+      <div id="tab-datatable" class="tab-content hidden fade-in space-y-4">
+         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+               <h3 class="font-title font-bold text-gray-800 text-lg">ฐานข้อมูลผู้ลงทะเบียน</h3>
+               <div class="relative w-full md:w-1/3">
+                  <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="🔍 ค้นหาด้วยชื่อ หรือ เบอร์โทร..." class="w-full pl-10 p-2.5 border border-gray-200 rounded-lg outline-none focus:border-green-500">
+               </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สัดส่วนประเภทหน่วยงาน</h3>
-              <!-- ปรับ Container เป็น relative w-full แก้กราฟแท่งหดตัว -->
-              <div class="h-64 relative w-full"><canvas id="orgChart"></canvas></div>
+            
+            <div class="overflow-x-auto">
+               <table class="w-full text-left border-collapse whitespace-nowrap">
+                  <thead>
+                     <tr class="bg-green-50 text-green-800 border-b border-green-100">
+                        <th class="p-3 rounded-tl-lg w-16">ลำดับ</th>
+                        <th class="p-3">ชื่อผู้ประสานงาน</th>
+                        <th class="p-3">เบอร์โทรศัพท์</th>
+                        <th class="p-3">หน่วยงาน</th>
+                        <th class="p-3">ความประสงค์</th>
+                        <th class="p-3 rounded-tr-lg text-center">ผู้ติดตาม</th>
+                     </tr>
+                  </thead>
+                  <tbody id="dataTableBody"></tbody>
+               </table>
             </div>
-          </div>
-        </div>
-        
-        <div id="tab-logistics" class="tab-content hidden space-y-6">
-          <div class="grid lg:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สรุปจำนวนเสื้อแยกตามไซซ์</h3>
-              <div class="h-64 relative w-full"><canvas id="shirtChart"></canvas></div>
+
+            <div class="flex justify-between items-center mt-6 text-gray-600 font-semibold text-sm">
+               <button onclick="prevPage()" id="btn-prev" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50">⬅️ ก่อนหน้า</button>
+               <span id="pageInfo">หน้า 1 / 1</span>
+               <button onclick="nextPage()" id="btn-next" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50">ถัดไป ➡️</button>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h3 class="font-title font-bold text-gray-700 mb-4 text-center">ข้อจำกัดด้านอาหาร</h3>
-              <div class="h-64 flex justify-center"><canvas id="foodChart"></canvas></div>
-            </div>
-          </div>
-        </div>
+         </div>
+      </div>
 
-        <!-- ตัด Tab ข้อมูลผู้เข้าร่วม (Demographics) ออกทั้งหมด -->
-
-        <div id="tab-datatable" class="tab-content hidden space-y-4">
-           <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                 <h3 class="font-title font-bold text-gray-800 text-lg">ฐานข้อมูลผู้ลงทะเบียนทั้งหมด</h3>
-                 <div class="relative w-full md:w-1/3">
-                    <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="🔍 ค้นหาด้วยชื่อ หรือ เบอร์โทร..." class="w-full pl-10 p-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none">
-                    <span class="absolute left-3 top-3 text-gray-400">🔍</span>
-                 </div>
-              </div>
-              
-              <div class="overflow-x-auto">
-                 <table class="w-full text-left border-collapse whitespace-nowrap">
-                    <thead>
-                       <tr class="bg-pale text-primary border-b border-gray-200">
-                          <th class="p-3 rounded-tl-lg w-16">ลำดับ</th>
-                          <th class="p-3">ชื่อผู้ประสานงาน</th>
-                          <th class="p-3">เบอร์โทรศัพท์</th>
-                          <th class="p-3">หน่วยงาน</th>
-                          <th class="p-3">ความประสงค์</th>
-                          <th class="p-3 rounded-tr-lg text-center">จัดการ</th>
-                       </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                    </tbody>
-                 </table>
-              </div>
-
-              <div class="flex justify-between items-center mt-6 text-gray-600 font-semibold text-sm">
-                 <button onclick="prevPage()" id="btn-prev" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50">⬅️ ก่อนหน้า</button>
-                 <span id="pageInfo">หน้า 1 / 1</span>
-                 <button onclick="nextPage()" id="btn-next" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50">ถัดไป ➡️</button>
-              </div>
-           </div>
-        </div>
-
-      </main>
     </div>
   `;
 
@@ -560,7 +538,6 @@ function loadAdminDashboard() {
 
         new Chart(document.getElementById('intentChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ยืนยันเข้าร่วม', 'ไม่เข้าร่วม'], datasets: [{ data: [d.intent?.joined || 0, d.intent?.declined || 0], backgroundColor: ['#2E7D32', '#D32F2F'], borderWidth: 0 }] }, options: commonOptions });
         
-        // คำนวณองค์กรอื่น ๆ (ที่ไม่ได้อยู่ใน 4 หมวดหมู่หลัก) เพื่อให้กราฟแสดงผลถูกต้อง
         const village = d.orgStats?.village || 0;
         const customer = d.orgStats?.customer || 0;
         const school = d.orgStats?.school || 0;
@@ -584,7 +561,6 @@ function loadAdminDashboard() {
         const shirtLabels = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
         new Chart(document.getElementById('shirtChart').getContext('2d'), { type: 'bar', data: { labels: shirtLabels, datasets: [{ data: shirtLabels.map(size => d.logistics?.shirts[size] || 0), backgroundColor: '#81C784', borderRadius: 4 }] }, options: barOptions });
         
-        // ปรับกราฟอาหารให้เหลือแค่ 2 สัดส่วน (ไม่มีข้อจำกัด vs มีข้อจำกัดแพ้อาหาร)
         const limitFood = d.summary?.totalFoodLimits || 0;
         const noLimitFood = Math.max(0, (d.summary?.totalParts || 0) - limitFood);
 
@@ -601,8 +577,6 @@ function loadAdminDashboard() {
             options: commonOptions 
         });
 
-        // ลบโค้ด new Chart สำหรับ demoChart ออก
-
         tableData = d.registrations || [];
         filteredData = [...tableData];
         currentPage = 1;
@@ -616,12 +590,19 @@ function loadAdminDashboard() {
 }
 
 window.switchTab = function(tabName) {
+  // Reset all tabs
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('bg-primary'); btn.classList.add('hover:bg-white/10');
+    btn.classList.remove('bg-green-700', 'text-white');
+    btn.classList.add('bg-gray-100', 'text-gray-700');
   });
-  event.currentTarget.classList.add('bg-primary');
-  event.currentTarget.classList.remove('hover:bg-white/10');
+  
+  // Active current tab
+  event.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
+  event.currentTarget.classList.add('bg-green-700', 'text-white');
+  
+  // Hide all contents
   document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+  // Show target content
   document.getElementById(`tab-${tabName}`).classList.remove('hidden');
 };
 
@@ -652,7 +633,7 @@ function renderTable() {
               <td class="p-3 max-w-[200px] truncate" title="${row.orgName}">${row.orgName || "-"}</td>
               <td class="p-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeColor}">${row.intent}</span></td>
               <td class="p-3 text-center">
-                 ${hasParticipants ? `<button onclick="toggleDetail('detail-${row.coordId}')" class="text-primary hover:text-primaryDark font-semibold underline text-sm">ดูผู้ติดตาม (${row.participants.length})</button>` : `<span class="text-gray-400 text-sm">-</span>`}
+                 ${hasParticipants ? `<button onclick="toggleDetail('detail-${row.coordId}')" class="text-green-600 hover:text-green-800 font-semibold underline text-sm">ดูผู้ติดตาม (${row.participants.length})</button>` : `<span class="text-gray-400 text-sm">-</span>`}
               </td>
             </tr>
           `;
@@ -665,9 +646,9 @@ function renderTable() {
              partHtml += `</table>`;
              
              html += `
-               <tr id="detail-${row.coordId}" class="hidden bg-gray-50/80 border-b border-gray-200 shadow-inner">
+               <tr id="detail-${row.coordId}" class="hidden bg-gray-50 border-b border-gray-200 shadow-inner">
                   <td colspan="6" class="p-4">
-                     <div class="pl-12 border-l-4 border-primary">
+                     <div class="pl-6 border-l-4 border-green-600">
                         <h4 class="font-bold text-gray-700 mb-2 text-sm">รายชื่อผู้ติดตาม</h4>
                         ${partHtml}
                      </div>
@@ -701,19 +682,4 @@ window.toggleDetail = function(id) {
    const el = document.getElementById(id);
    if (el.classList.contains("hidden")) el.classList.remove("hidden");
    else el.classList.add("hidden");
-};
-
-window.toggleSidebar = function() {
-   const sidebar = document.getElementById("admin-sidebar");
-   const overlay = document.getElementById("sidebar-overlay");
-   
-   if (window.innerWidth >= 768) return; 
-
-   if (sidebar.classList.contains("-translate-x-full")) {
-       sidebar.classList.remove("-translate-x-full");
-       overlay.classList.remove("hidden");
-   } else {
-       sidebar.classList.add("-translate-x-full");
-       overlay.classList.add("hidden");
-   }
 };

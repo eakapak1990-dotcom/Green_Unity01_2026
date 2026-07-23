@@ -6,9 +6,9 @@
   <title>แบบสำรวจกิจกรรมปลูกป่า Green Unity 2026</title>
   
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Prompt:wght@400;800&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700&family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Tailwind CSS via CDN -->
+  <!-- Tailwind CSS via CDN (เก็บไว้เผื่อ app.js มีการ inject class เข้ามา) -->
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- SweetAlert2 & Chart.js -->
@@ -18,188 +18,351 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
   
-  <!-- Tailwind Config Theme -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#2E7D32',      // เขียวเข้ม
-            primaryDark: '#1F5C24',  // เขียวเข้มเข้มขึ้น (สำหรับ hover)
-            secondary: '#66BB6A',    // เขียวอ่อน
-            pale: '#E8F5E9',         // เขียวพาสเทลอ่อนมาก (สำหรับพื้นหลังไอคอน/แถบ)
-            cream: '#FBF6EA',        // ครีมอ่อน (กรอบข้อมูล)
-            creamLine: '#EDE3CC'     // เส้นขอบครีมเข้มขึ้นเล็กน้อย
-          },
-          fontFamily: {
-            title: ['Prompt', 'Kanit', 'sans-serif'],
-            body: ['Sarabun', 'Prompt', 'sans-serif']
-          },
-          boxShadow: {
-            soft: '0 20px 40px -22px rgba(22,40,26,0.30)'
-          }
-        }
-      }
+  <!-- UI Mockup CSS -->
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-dark: #1F5C24;
+      --secondary: #66BB6A;
+      --pale: #E8F5E9;
+      --cream: #FBF6EA;
+      --cream-line: #EDE3CC;
+      --forest: #173B1A;
+      --ink: #233326;
+      --gold: #C9A24B;
+      --gold-soft: #E4D3A0;
+      --shadow-soft: 0 20px 45px -20px rgba(23,59,26,0.28);
+      --shadow-lift: 0 26px 55px -18px rgba(23,59,26,0.38);
     }
-  </script>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 550px at 12% -10%, rgba(102,187,106,0.20), transparent 60%),
+        radial-gradient(900px 520px at 100% 0%, rgba(46,125,50,0.13), transparent 55%),
+        linear-gradient(180deg, #FBFDF9 0%, #F3F7F0 45%, #FFFFFF 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+    h1, h2, h3, h4, .font-title { font-family: 'Prompt', sans-serif; }
+
+    /* ===== Background ===== */
+    .forest-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .forest-bg svg { width: 100%; height: 100%; }
+    .forest-bg::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.65) 55%, rgba(255,255,255,0.92) 100%);
+    }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 56px 20px 80px; position: relative; z-index: 1; }
+
+    /* ===== Hero ===== */
+    .hero { position: relative; text-align: center; padding: 8px 8px 40px; overflow: visible; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; font-family: 'Prompt', sans-serif; font-weight: 600;
+      font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 8px 20px; border-radius: 999px;
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(228,211,160,0.6) inset;
+      margin-bottom: 22px;
+    }
+    .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); font-weight: 800; color: var(--forest); margin: 0 0 10px; letter-spacing: -0.01em; }
+    .hero h1 span {
+      background: linear-gradient(120deg, var(--primary), #3fa447 60%, var(--secondary));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p.sub { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: #3b4a3c; font-weight: 600; margin: 0 0 32px; }
+
+    .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(8px);
+      border: 1px solid var(--cream-line); padding: 11px 20px; border-radius: 999px;
+      font-family: 'Prompt', sans-serif; font-weight: 600; font-size: 14.5px;
+      color: #33422f; box-shadow: var(--shadow-soft);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .badge:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+
+    /* ===== Cards grid ===== */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 52px; align-items: stretch; }
+    @media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .card {
+      position: relative; background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.84));
+      border: 1px solid var(--cream-line); border-radius: 26px; padding: 38px 32px 34px;
+      box-shadow: var(--shadow-soft), 0 1px 0 rgba(255,255,255,0.6) inset;
+      display: flex; flex-direction: column; backdrop-filter: blur(6px);
+      transition: box-shadow .3s ease, transform .3s ease; overflow: hidden;
+    }
+    .card:hover { box-shadow: var(--shadow-lift), 0 1px 0 rgba(255,255,255,0.6) inset; transform: translateY(-2px); }
+    .card::before {
+      content: ""; position: absolute; top: -40px; right: -40px;
+      width: 150px; height: 150px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(102,187,106,0.20), transparent 70%);
+    }
+    .card::after {
+      content: ""; position: absolute; top: 0; left: 24px; right: 24px; height: 3px;
+      background: linear-gradient(90deg, var(--gold-soft), var(--secondary) 45%, var(--gold) 100%);
+      border-radius: 0 0 3px 3px; opacity: 0.85;
+    }
+
+    .card h2 { font-size: 1.55rem; font-weight: 700; color: var(--forest); margin: 0 0 6px; display: flex; align-items: center; gap: 10px; }
+    .card .lead { color: #4b5a49; font-weight: 600; margin: 0 0 14px; font-size: 15px;}
+    
+    .pill-note {
+      align-self: flex-start; background: #FDECEC; color: #c0392b; font-weight: 700; font-size: 12.5px;
+      padding: 6px 16px; border-radius: 999px; border: 1px solid #f6d4d4; margin-bottom: 20px;
+    }
+
+    .pdpa-box {
+      background: #fff; border: 1px solid var(--cream-line); border-radius: 16px;
+      padding: 18px; font-size: 14px; line-height: 1.7; color: #4a564a;
+      height: 190px; overflow-y: auto; margin-bottom: 18px;
+    }
+    .pdpa-box::-webkit-scrollbar { width: 7px; }
+    .pdpa-box::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 6px; }
+    .pdpa-box b { display: block; margin-bottom: 8px; color: var(--forest); text-decoration: underline;}
+
+    .agree-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 24px; cursor: pointer; }
+    .agree-row input { margin-top: 3px; width: 19px; height: 19px; accent-color: var(--primary); }
+    .agree-row span { font-size: 14.5px; font-weight: 600; color: #3b4638; }
+
+    .btn {
+      border: none; cursor: pointer; font-family: 'Prompt', sans-serif; font-weight: 700;
+      font-size: 17px; padding: 16px; border-radius: 999px; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform .2s ease, box-shadow .25s ease, filter .2s ease;
+      margin-top: auto;
+    }
+    .btn-primary { color: #fff; background: linear-gradient(135deg, var(--primary), #3c9a41); box-shadow: 0 16px 30px -12px rgba(46,125,50,0.55); }
+    .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .btn-dark { color: #fff; background: linear-gradient(135deg, #2b2f2b, #14171a); box-shadow: 0 16px 30px -14px rgba(0,0,0,0.45); }
+    .btn-dark:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    /* ===== Forms ===== */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 14px; font-weight: 700; color: #3b4638; margin-bottom: 8px; }
+    .field input[type="text"], .field input[type="number"], .field input[type="tel"], .field input[type="email"], .field input[type="password"], .field textarea {
+      width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--cream-line);
+      background: #fff; font-family: 'Sarabun', sans-serif; font-size: 15px; outline: none;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(102,187,106,0.25); }
+    
+    .form-preview {
+      background: #fff; border: 1px solid var(--cream-line); border-radius: 26px;
+      padding: 38px; box-shadow: var(--shadow-soft); position: relative;
+    }
+    .back-link { font-size: 14px; font-weight: 700; color: #9aa79a; cursor: pointer; position: absolute; top: 38px; left: 38px; }
+    .back-link:hover { color: var(--forest); }
+    .form-preview h2 { text-align: center; font-size: 1.8rem; color: var(--primary); margin: 14px 0 36px; }
+    .step-title {
+      font-size: 17px; font-weight: 700; color: var(--forest);
+      border-bottom: 2px solid var(--cream); padding-bottom: 10px; margin-bottom: 20px; margin-top: 32px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .row2 { grid-template-columns: 1fr; } .back-link { position: static; display: block; margin-bottom: 20px; } }
+    
+    /* Radio styling */
+    .radio-group { display: flex; gap: 24px; margin-top: 8px; }
+    .radio-group label { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; font-size: 15px; }
+    .radio-group input[type="radio"] { width: 18px; height: 18px; accent-color: var(--primary); }
+    
+    /* Utility */
+    .hidden { display: none !important; }
+  </style>
 </head>
 
-<!-- Layer 1: ภาพพื้นหลัง (ล็อกให้อยู่กับที่ด้วย bg-fixed และใช้ Tailwind Arbitrary Value) -->
-<body class="text-gray-800 font-body min-h-screen bg-cover bg-center bg-no-repeat bg-fixed bg-[url('./assets/bg-main.jpg')]">
+<body>
 
-  <!-- Layer 2: กระจกฝ้า Overlay ปรับความทึบแสงเป็น 60% เพื่อให้ภาพด้านหลังโดดเด่นขึ้น -->
-  <div class="min-h-screen w-full bg-white/60 backdrop-blur-sm flex flex-col">
+  <!-- Signature Forest Background -->
+  <div class="forest-bg" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sunGlow" cx="50%" cy="10%" r="70%">
+          <stop offset="0%" stop-color="#FFF8DF" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#FFF8DF" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="760" cy="40" r="360" fill="url(#sunGlow)"/>
+      <g fill="#2E7D32" opacity="0.16">
+        <path d="M0,430 L60,330 L100,400 L150,300 L200,410 L260,320 L310,420 L370,340 L420,430 L480,350 L540,430 L600,360 L660,430 L720,340 L780,430 L840,360 L900,430 L960,350 L1020,430 L1080,340 L1140,420 L1200,330 L1260,410 L1320,320 L1380,410 L1440,340 L1440,470 L0,470 Z"/>
+      </g>
+      <g fill="#173B1A" opacity="0.13">
+        <path d="M120,470 L170,360 L220,470 Z"/>
+        <path d="M175,470 L225,330 L275,470 Z"/>
+        <path d="M300,470 L355,350 L410,470 Z"/>
+        <path d="M470,470 L520,320 L570,470 Z"/>
+        <path d="M540,470 L600,370 L660,470 Z"/>
+        <path d="M780,470 L835,340 L890,470 Z"/>
+        <path d="M900,470 L955,360 L1010,470 Z"/>
+        <path d="M1080,470 L1135,330 L1190,470 Z"/>
+        <path d="M1200,470 L1260,360 L1320,470 Z"/>
+        <path d="M50,470 L100,380 L150,470 Z"/>
+        <path d="M1320,470 L1375,350 L1430,470 Z"/>
+      </g>
+      <g fill="#173B1A" opacity="0.10">
+        <path d="M170,900 L170,470 L182,470 L182,900 Z"/>
+        <path d="M330,900 L330,460 L340,460 L340,900 Z"/>
+        <path d="M1010,900 L1010,465 L1022,465 L1022,900 Z"/>
+        <path d="M1250,900 L1250,455 L1262,455 L1262,900 Z"/>
+        <ellipse cx="176" cy="440" rx="90" ry="60"/>
+        <ellipse cx="335" cy="430" rx="100" ry="66"/>
+        <ellipse cx="1016" cy="435" rx="95" ry="62"/>
+        <ellipse cx="1256" cy="425" rx="105" ry="68"/>
+      </g>
+    </svg>
+  </div>
 
-    <!-- ================= หน้าที่ 1: LANDING & PDPA GATEWAY ================= -->
-    <div id="view-landing" class="max-w-6xl mx-auto px-4 py-12 flex-1 w-full">
-      <!-- ส่วนที่ 1: Header & Event Information -->
-      <div class="text-center mb-10">
-        <h1 class="text-3xl md:text-5xl font-title font-extrabold text-primary mb-4 drop-shadow-md">Green Unity 2026</h1>
-        <p class="text-xl text-gray-900 font-semibold drop-shadow-sm">รวมพลังภาคี ปลูกป่า สร้างอนาคตที่ยั่งยืน</p>
-        
-        <!-- ข้อมูล วัน เวลา สถานที่ (Badges) -->
-        <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-5 mt-8">
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
-            <span class="text-lg">📅</span>
-            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">วันศุกร์ที่ 16 ตุลาคม 2569</span>
-          </div>
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
-            <span class="text-lg">🕗</span>
-            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">เวลา 08.00 – 13.00 น.</span>
-          </div>
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
-            <span class="text-lg">📍</span>
-            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">ศูนย์ศึกษาธรรมชาติกองทัพบก บางปู จังหวัดสมุทรปราการ</span>
-          </div>
+  <!-- ================= หน้าที่ 1: LANDING & PDPA GATEWAY ================= -->
+  <div id="view-landing" class="wrap">
+    
+    <div class="hero">
+      <span class="eyebrow">🌱 GREEN UNITY 2026</span>
+      <h1><span>รวมพลังภาคี</span> ปลูกป่า สร้างอนาคตที่ยั่งยืน</h1>
+      <p class="sub">แบบสำรวจกิจกรรมปลูกป่า Green Unity 2026</p>
+
+      <div class="badges">
+        <div class="badge"><span class="ic">📅</span> วันศุกร์ที่ 16 ตุลาคม 2569</div>
+        <div class="badge"><span class="ic">🕗</span> เวลา 08.00 – 13.00 น.</div>
+        <div class="badge"><span class="ic">📍</span> ศูนย์ศึกษาธรรมชาติกองทัพบก บางปู จังหวัดสมุทรปราการ</div>
+      </div>
+    </div>
+    
+    <div class="grid2">
+      <!-- Card แบบสำรวจ -->
+      <div class="card">
+        <h2>📝 แบบสำรวจผู้เข้าร่วมกิจกรรม</h2>
+        <p class="lead">กรุณากรอกข้อมูลเพื่อยืนยันการเข้าร่วมกิจกรรม</p>
+        <div class="pill-note">(1 ท่าน ต่อ 1 แบบฟอร์ม)</div>
+
+        <div class="pdpa-box">
+          <b>การขอความยินยอมในการประมวลผลข้อมูลส่วนบุคคล (PDPA)</b>
+          "ข้าพเจ้ายินยอมให้ บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน) เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ได้แก่ ภาพถ่าย ภาพเคลื่อนไหว และ/หรือเสียง ที่ถูกบันทึกในระหว่างการเข้าร่วมกิจกรรมนอกสถานที่ เพื่อวัตถุประสงค์ในการนำไปใช้จัดทำสื่อประชาสัมพันธ์กิจกรรมขององค์กร ผ่านช่องทางสื่อสารต่างๆ ทั้งภายในและภายนอก (เช่น เว็บไซต์, โซเชียลมีเดีย, สื่อสิ่งพิมพ์) ทั้งนี้ ข้าพเจ้าได้รับทราบว่าสามารถใช้สิทธิขอถอนความยินยอมนี้ได้ในภายหลัง ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (Privacy Policy) ของบริษัทฯ โดยการถอนความยินยอมจะไม่ส่งผลกระทบต่อการใช้ข้อมูลที่ได้ดำเนินการไปแล้วก่อนหน้านั้น"
         </div>
+
+        <label class="agree-row">
+          <input type="checkbox" id="chk-pdpa">
+          <span>ข้าพเจ้าอ่านรายละเอียดและกดยอมรับข้อตกลงความเป็นส่วนตัว (PDPA)</span>
+        </label>
+
+        <button onclick="handleStartSurvey()" class="btn btn-primary">เริ่มทำแบบสำรวจ</button>
       </div>
       
-      <!-- ส่วนที่ 2: Content Cards -->
-      <div class="grid md:grid-cols-2 gap-8 items-stretch">
-        <!-- Card แบบสำรวจ (อัปเดตคำชี้แจง) -->
-        <div class="border border-creamLine p-8 rounded-2xl shadow-soft flex flex-col bg-cream/40">
-          <h2 class="text-2xl md:text-3xl font-title font-bold text-primary mb-2">📝 แบบสำรวจผู้เข้าร่วมกิจกรรม</h2>
-          <p class="text-gray-700 font-semibold mb-2">กรุณากรอกข้อมูลเพื่อยืนยันการเข้าร่วมกิจกรรม</p>
-          <div class="self-start bg-red-50 text-red-600 font-bold text-sm px-4 py-1.5 rounded-full mb-5 border border-red-100 shadow-sm">
-            (1 ท่าน ต่อ 1 แบบฟอร์ม)
-          </div>
+      <!-- Card สำหรับ Admin -->
+      <div class="card">
+        <h2 style="color:var(--ink);">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
+        <p class="lead">สำหรับเข้าตรวจดู Dashboard รายงานสถิติยอดผู้ลงทะเบียนรวม</p>
 
-          <div class="bg-white border border-creamLine rounded-lg p-4 text-sm text-gray-700 h-48 overflow-y-auto mb-4 leading-relaxed">
-            <p class="font-bold mb-2 text-gray-900 underline">การขอความยินยอมในการประมวลผลข้อมูลส่วนบุคคล (PDPA)</p>
-            "ข้าพเจ้ายินยอมให้ บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน) เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ได้แก่ ภาพถ่าย ภาพเคลื่อนไหว และ/หรือเสียง ที่ถูกบันทึกในระหว่างการเข้าร่วมกิจกรรมนอกสถานที่ เพื่อวัตถุประสงค์ในการนำไปใช้จัดทำสื่อประชาสัมพันธ์กิจกรรมขององค์กร ผ่านช่องทางสื่อสารต่างๆ ทั้งภายในและภายนอก (เช่น เว็บไซต์, โซเชียลมีเดีย, สื่อสิ่งพิมพ์) ทั้งนี้ ข้าพเจ้าได้รับทราบว่าสามารถใช้สิทธิขอถอนความยินยอมนี้ได้ในภายหลัง ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (Privacy Policy) ของบริษัทฯ โดยการถอนความยินยอมจะไม่ส่งผลกระทบต่อการใช้ข้อมูลที่ได้ดำเนินการไปแล้วก่อนหน้านั้น"
-          </div>
-          <label class="flex items-start gap-3 mb-6 cursor-pointer">
-            <input type="checkbox" id="chk-pdpa" class="mt-1 w-5 h-5 accent-primary rounded cursor-pointer border-gray-300">
-            <span class="text-sm select-none font-semibold text-gray-800">ข้าพเจ้าอ่านรายละเอียดและกดยอมรับข้อตกลงความเป็นส่วนตัว (PDPA)</span>
-          </label>
-          <button onclick="handleStartSurvey()" class="mt-auto w-full bg-primary hover:bg-primaryDark text-white font-title font-bold py-3.5 rounded-full shadow-soft transition duration-200 text-lg">เริ่มทำแบบสำรวจ</button>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="admin-user">
         </div>
-        
-        <!-- Card สำหรับ Admin -->
-        <div class="border border-creamLine p-8 rounded-2xl shadow-soft flex flex-col bg-cream/40">
-          <h2 class="text-2xl font-title font-bold text-gray-800 mb-4">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
-          <p class="text-sm text-gray-600 mb-4 font-semibold">สำหรับเข้าตรวจดู Dashboard รายงานสถิติยอดผู้ลงทะเบียนรวม</p>
-          <div class="space-y-4 mb-6">
-            <div>
-              <label class="block text-xs font-semibold mb-1 text-gray-700">Username</label>
-              <input type="text" id="admin-user" class="w-full p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold mb-1 text-gray-700">Password</label>
-              <input type="password" id="admin-pass" class="w-full p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow">
-            </div>
-          </div>
-          <button onclick="handleAdminLogin()" class="mt-auto w-full bg-gray-800 hover:bg-gray-950 text-white font-title font-bold py-3.5 rounded-full shadow-soft transition duration-200 text-lg">เข้าสู่ระบบ Dashboard</button>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="admin-pass">
         </div>
+
+        <button onclick="handleAdminLogin()" class="btn btn-dark">เข้าสู่ระบบ Dashboard</button>
       </div>
     </div>
+  </div>
 
-    <!-- ================= หน้าที่ 2: FORM INPUTS ================= -->
-    <!-- Layer 3: แบบฟอร์มลอยอยู่บนสุด -->
-    <div id="view-form" class="max-w-4xl mx-auto px-4 py-12 hidden fade-in w-full">
-      <div class="bg-white border border-creamLine rounded-2xl p-6 md:p-10 shadow-soft relative">
-        <button onclick="goBackToLanding()" class="absolute top-4 left-4 md:top-6 md:left-6 text-gray-400 hover:text-gray-800 font-bold transition">← ย้อนกลับ</button>
-        <h2 class="text-2xl md:text-3xl font-title font-bold text-center text-primary mt-6 md:mt-0 mb-8">ข้อมูลการลงทะเบียน</h2>
-        
-        <form id="survey-form" class="space-y-8" onsubmit="validateAndSubmit(event)">
+  <!-- ================= หน้าที่ 2: FORM INPUTS ================= -->
+  <div id="view-form" class="wrap hidden">
+    <div class="form-preview">
+      <span class="back-link" onclick="goBackToLanding()">← ย้อนกลับ</span>
+      <h2 class="font-title">ข้อมูลการลงทะเบียน</h2>
+      
+      <form id="survey-form" onsubmit="validateAndSubmit(event)">
+          
+          <!-- ส่วนที่ 4 รายชื่อผู้เข้าร่วมและขนาดเสื้อ -->
+          <div id="section-4">
+            <div class="step-title">ส่วนที่ 4: รายชื่อผู้เข้าร่วมและขนาดเสื้อ</div>
             
-            <!-- ส่วนที่ 4 รายชื่อผู้เข้าร่วมและขนาดเสื้อ -->
-            <div id="section-4" class="p-4 mb-4 border border-creamLine rounded-lg shadow-sm bg-cream/20">
-              <h3 class="text-lg font-title font-bold text-gray-800 mb-3 border-b border-creamLine pb-2">ส่วนที่ 4 รายชื่อผู้เข้าร่วมและขนาดเสื้อประเภทผู้เข้าร่วม</h3>
-              
-              <div class="mb-4">
-                <label class="block font-semibold mb-1 text-gray-700">จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
-                <input type="number" id="participant_count" min="1" max="50" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow" required placeholder="ระบุจำนวนผู้เข้าร่วม (เช่น 5)">
-                <p class="text-sm text-gray-500 mt-1">หมายเหตุ: ต้องกรอกรายชื่อให้ครบตามจำนวน ระบบจึงจะอนุญาตให้ส่งข้อมูล</p>
-              </div>
+            <div class="field">
+              <label>จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
+              <input type="number" id="participant_count" min="1" max="50" required placeholder="ระบุจำนวนผู้เข้าร่วม (เช่น 5)">
+              <p class="text-sm text-gray-500 mt-2">หมายเหตุ: ต้องกรอกรายชื่อให้ครบตามจำนวน ระบบจึงจะอนุญาตให้ส่งข้อมูล</p>
+            </div>
 
-              <!-- Container สำหรับ Render รายชื่อแบบ Dynamic (app.js จะเอา HTML มาใส่ที่นี่) -->
-              <div id="participants_container" class="space-y-4"></div>
-              
-              <div class="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                <p class="text-sm text-blue-700 font-semibold">
-                  * กรุณาเลือกขนาดเสื้อให้ตรงกับผู้เข้าร่วมแต่ละคน เนื่องจากบริษัทจะจัดเตรียมเสื้อตามข้อมูลที่ลงทะเบียน
-                </p>
+            <!-- Container สำหรับ Render รายชื่อแบบ Dynamic (คลาส Tailwind ยังอยู่เพื่อให้ js ทำงานได้ปกติ) -->
+            <div id="participants_container" class="space-y-4 my-4"></div>
+            
+            <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg mt-4 mb-8">
+              <p class="text-sm text-blue-700 font-semibold m-0">
+                * กรุณาเลือกขนาดเสื้อให้ตรงกับผู้เข้าร่วมแต่ละคน เนื่องจากบริษัทจะจัดเตรียมเสื้อตามข้อมูลที่ลงทะเบียน
+              </p>
+            </div>
+          </div>
+
+          <!-- ส่วนที่ 5 ข้อมูลสุขภาพและความปลอดภัย -->
+          <div id="section-5">
+            <div class="step-title">ส่วนที่ 5: ข้อมูลสุขภาพและความปลอดภัย</div>
+            
+            <div class="field">
+              <label>14. มีผู้เข้าร่วมที่มีโรคประจำตัวหรือข้อจำกัดในการทำกิจกรรมกลางแจ้งหรือไม่ <span class="text-red-500">*</span></label>
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="has_disease" value="ไม่มี" required> 
+                  ไม่มี
+                </label>
+                <label>
+                  <input type="radio" name="has_disease" value="มี"> 
+                  มี
+                </label>
               </div>
             </div>
 
-            <!-- ส่วนที่ 5 ข้อมูลสุขภาพและความปลอดภัย -->
-            <div id="section-5" class="p-4 mb-4 border border-creamLine rounded-lg shadow-sm bg-cream/20">
-              <h3 class="text-lg font-title font-bold text-gray-800 mb-3 border-b border-creamLine pb-2">ส่วนที่ 5 ข้อมูลสุขภาพและความปลอดภัย</h3>
-              
-              <div class="mb-4">
-                <label class="block font-semibold mb-2 text-gray-700">14. มีผู้เข้าร่วมที่มีโรคประจำตัวหรือข้อจำกัดในการทำกิจกรรมกลางแจ้งหรือไม่ <span class="text-red-500">*</span></label>
-                <div class="flex gap-6 mt-2">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="has_disease" value="ไม่มี" class="w-4 h-4 accent-primary" required> 
-                    <span class="text-gray-700">ไม่มี</span>
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="has_disease" value="มี" class="w-4 h-4 accent-primary"> 
-                    <span class="text-gray-700">มี</span>
-                  </label>
-                </div>
-              </div>
-
-              <div id="disease_details_container" class="mb-4 hidden bg-white p-4 rounded-lg border border-creamLine">
-                <label class="block font-semibold mb-1 text-gray-700">15. รายละเอียดโรคประจำตัวหรือข้อจำกัด <span class="text-red-500">*</span></label>
-                <textarea id="disease_details" name="disease_details" rows="3" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none transition-shadow" placeholder="ตัวอย่าง: ผู้เข้าร่วมลำดับที่ 3 เป็นโรคหอบหืด, ลำดับที่ 5 ไม่สามารถยืนนานได้"></textarea>
-                <p class="text-sm text-gray-500 mt-1">กรุณาระบุเฉพาะข้อมูลที่จำเป็นต่อการดูแลความปลอดภัยในวันจัดกิจกรรม</p>
-              </div>
-
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="mb-2">
-                  <label class="block font-semibold mb-1 text-gray-700">16. ผู้ติดต่อกรณีฉุกเฉิน <span class="text-red-500">*</span></label>
-                  <input type="text" id="emergency_contact" name="emergency_contact" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow" required placeholder="ชื่อ-นามสกุล">
-                </div>
-                <div class="mb-2">
-                  <label class="block font-semibold mb-1 text-gray-700">17. เบอร์โทรศัพท์กรณีฉุกเฉิน <span class="text-red-500">*</span></label>
-                  <input type="tel" id="emergency_phone" name="emergency_phone" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow" required placeholder="08X-XXX-XXXX">
-                </div>
-              </div>
+            <div id="disease_details_container" class="field hidden">
+              <label>15. รายละเอียดโรคประจำตัวหรือข้อจำกัด <span class="text-red-500">*</span></label>
+              <textarea id="disease_details" name="disease_details" rows="3" placeholder="ตัวอย่าง: ผู้เข้าร่วมลำดับที่ 3 เป็นโรคหอบหืด, ลำดับที่ 5 ไม่สามารถยืนนานได้"></textarea>
+              <p class="text-sm text-gray-500 mt-1">กรุณาระบุเฉพาะข้อมูลที่จำเป็นต่อการดูแลความปลอดภัยในวันจัดกิจกรรม</p>
             </div>
 
-            <!-- ปุ่ม Submit -->
-            <div class="pt-6 border-t border-creamLine">
-              <button type="submit" class="w-full bg-primary hover:bg-primaryDark text-white font-title font-bold py-4 rounded-xl shadow-soft transition duration-200 text-lg flex justify-center items-center gap-2">
-                <span>ส่งข้อมูลลงทะเบียน</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </button>
+            <div class="row2">
+              <div class="field">
+                <label>16. ผู้ติดต่อกรณีฉุกเฉิน <span class="text-red-500">*</span></label>
+                <input type="text" id="emergency_contact" name="emergency_contact" required placeholder="ชื่อ-นามสกุล">
+              </div>
+              <div class="field">
+                <label>17. เบอร์โทรศัพท์กรณีฉุกเฉิน <span class="text-red-500">*</span></label>
+                <input type="tel" id="emergency_phone" name="emergency_phone" required placeholder="08X-XXX-XXXX">
+              </div>
             </div>
-        </form>
-      </div>
+          </div>
+
+          <!-- ปุ่ม Submit -->
+          <div style="margin-top: 40px;">
+            <button type="submit" class="btn btn-primary">
+              ส่งข้อมูลลงทะเบียน
+              <svg style="width: 20px; height: 20px; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </div>
+      </form>
     </div>
+  </div>
 
-    <!-- ================= หน้าที่ 3: ADMIN DASHBOARD (ซ่อนไว้ตอนเริ่มต้น) ================= -->
-    <div id="view-admin" class="min-h-screen flex hidden w-full bg-white/95">
-       <!-- Dashboard Content (ถ้ามี) -->
-       <div class="p-8 w-full">
-           <h2 class="text-2xl font-title font-bold mb-4">Admin Dashboard</h2>
-           <button onclick="logoutAdmin()" class="bg-red-500 text-white px-4 py-2 rounded">ออกจากระบบ</button>
-       </div>
-    </div>
-
-  </div> <!-- ปิด div Overlay -->
+  <!-- ================= หน้าที่ 3: ADMIN DASHBOARD ================= -->
+  <!-- ส่วนนี้ปรับให้ดูสะอาดตาและเข้ากับธีม โดยที่ฟังก์ชันปุ่มยังอยู่ครบ -->
+  <div id="view-admin" class="wrap hidden">
+     <div class="form-preview" style="text-align: center;">
+         <h2 class="font-title">🔒 Admin Dashboard</h2>
+         <p style="margin-bottom: 30px;">ยินดีต้อนรับเข้าสู่ระบบจัดการข้อมูล</p>
+         <!-- พื้นที่สำหรับใส่ตาราง หรือ Chart.js ตามที่ app.js สร้างไว้ -->
+         <div id="admin-content" style="min-height: 300px;"></div>
+         
+         <button onclick="logoutAdmin()" class="btn btn-dark" style="max-width: 200px; margin: 40px auto 0;">ออกจากระบบ</button>
+     </div>
+  </div>
 
   <!-- เรียกใช้งาน Javascript -->
   <script src="app.js"></script>

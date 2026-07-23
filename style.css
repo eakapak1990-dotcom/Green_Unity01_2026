@@ -1,86 +1,509 @@
 /* =====================================================================
    1. GOOGLE FONTS IMPORT
    ===================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Prompt:wght@400;600;800&family=Sarabun:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@600;700&family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600&display=swap');
 
 /* =====================================================================
-   2. GLOBAL BASE & TYPOGRAPHY
+   2. GLOBAL VARIABLES (Green Unity 2026 Theme)
    ===================================================================== */
+:root {
+  --primary: #2E7D32;
+  --primary-dark: #1F5C24;
+  --secondary: #66BB6A;
+  --pale: #E8F5E9;
+  --cream: #FBF6EA;
+  --cream-line: #EDE3CC;
+  --forest: #173B1A;
+  --ink: #233326;
+  --gold: #C9A24B;
+  --gold-soft: #E4D3A0;
+  --shadow-soft: 0 20px 45px -20px rgba(23,59,26,0.28);
+  --shadow-lift: 0 26px 55px -18px rgba(23,59,26,0.38);
+}
+
+/* =====================================================================
+   3. GLOBAL BASE & TYPOGRAPHY
+   ===================================================================== */
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  /* ฟอนต์หลักสำหรับเนื้อหาทั่วไป */
+  margin: 0;
   font-family: 'Sarabun', sans-serif;
-  background-color: #FFFFFF;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 550px at 12% -10%, rgba(102,187,106,0.20), transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, rgba(46,125,50,0.13), transparent 55%),
+    linear-gradient(180deg, #FBFDF9 0%, #F3F7F0 45%, #FFFFFF 100%);
+  min-height: 100vh;
+  position: relative;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6, .font-title {
-  /* ฟอนต์หลักสำหรับหัวข้อ */
   font-family: 'Prompt', sans-serif;
 }
 
 /* =====================================================================
-   3. CUSTOM SCROLLBAR (ESG Green Theme)
+   4. LAYOUT & BACKGROUND
    ===================================================================== */
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 56px 20px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.forest-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.forest-bg svg {
+  width: 100%;
+  height: 100%;
+}
+
+.forest-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.65) 55%, rgba(255,255,255,0.92) 100%);
+}
+
+/* =====================================================================
+   5. UI COMPONENTS: HERO
+   ===================================================================== */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 8px 8px 40px;
+  overflow: visible;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft), 0 0 0 1px rgba(228,211,160,0.6) inset;
+  margin-bottom: 22px;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  font-weight: 800;
+  color: var(--forest);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.hero h1 span {
+  background: linear-gradient(120deg, var(--primary), #3fa447 60%, var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p.sub {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: #3b4a3c;
+  font-weight: 600;
+  margin: 0 0 32px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--cream-line);
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: #33422f;
+  box-shadow: var(--shadow-soft);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.badge:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* =====================================================================
+   6. UI COMPONENTS: CARDS & BUTTONS
+   ===================================================================== */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 52px;
+  align-items: stretch;
+}
+
+@media (max-width: 860px) {
+  .grid2 { grid-template-columns: 1fr; }
+}
+
+.card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.84));
+  border: 1px solid var(--cream-line);
+  border-radius: 26px;
+  padding: 38px 32px 34px;
+  box-shadow: var(--shadow-soft), 0 1px 0 rgba(255,255,255,0.6) inset;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(6px);
+  transition: box-shadow .3s ease, transform .3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lift), 0 1px 0 rgba(255,255,255,0.6) inset;
+  transform: translateY(-2px);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(102,187,106,0.20), transparent 70%);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-soft), var(--secondary) 45%, var(--gold) 100%);
+  border-radius: 0 0 3px 3px;
+  opacity: 0.85;
+}
+
+.card h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--forest);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card .lead {
+  color: #4b5a49;
+  font-weight: 600;
+  margin: 0 0 14px;
+  font-size: 15px;
+}
+
+.pill-note {
+  align-self: flex-start;
+  background: #FDECEC;
+  color: #c0392b;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid #f6d4d4;
+  margin-bottom: 20px;
+}
+
+.pdpa-box {
+  background: #fff;
+  border: 1px solid var(--cream-line);
+  border-radius: 16px;
+  padding: 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4a564a;
+  height: 190px;
+  overflow-y: auto;
+  margin-bottom: 18px;
+}
+
+.pdpa-box::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pdpa-box::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 6px;
+}
+
+.pdpa-box b {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--forest);
+  text-decoration: underline;
+}
+
+.agree-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.agree-row input {
+  margin-top: 3px;
+  width: 19px;
+  height: 19px;
+  accent-color: var(--primary);
+}
+
+.agree-row span {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #3b4638;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  padding: 16px;
+  border-radius: 999px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .2s ease, box-shadow .25s ease, filter .2s ease;
+  margin-top: auto;
+}
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #3c9a41);
+  box-shadow: 0 16px 30px -12px rgba(46,125,50,0.55);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.btn-dark {
+  color: #fff;
+  background: linear-gradient(135deg, #2b2f2b, #14171a);
+  box-shadow: 0 16px 30px -14px rgba(0,0,0,0.45);
+}
+
+.btn-dark:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* =====================================================================
+   7. FORMS & INPUTS
+   ===================================================================== */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #3b4638;
+  margin-bottom: 8px;
+}
+
+.field input[type="text"],
+.field input[type="number"],
+.field input[type="tel"],
+.field input[type="email"],
+.field input[type="password"],
+.field textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--cream-line);
+  background: #fff;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 4px rgba(102,187,106,0.25);
+}
+
+.form-preview {
+  background: #fff;
+  border: 1px solid var(--cream-line);
+  border-radius: 26px;
+  padding: 38px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.back-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: #9aa79a;
+  cursor: pointer;
+  position: absolute;
+  top: 38px;
+  left: 38px;
+}
+
+.back-link:hover {
+  color: var(--forest);
+}
+
+.form-preview h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin: 14px 0 36px;
+}
+
+.step-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--forest);
+  border-bottom: 2px solid var(--cream);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+  .back-link {
+    position: static;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+.radio-group {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.radio-group input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+/* =====================================================================
+   8. UTILITIES & OVERRIDES
+   ===================================================================== */
+.hidden {
+  display: none !important;
+}
+
+/* CUSTOM SCROLLBAR */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #FBF6EA; /* ครีมอ่อน */
+  background: var(--cream);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #66BB6A; /* เขียวอ่อน */
+  background: var(--secondary);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #2E7D32; /* เขียวเข้ม */
+  background: var(--primary);
 }
 
-/* =====================================================================
-   4. SWEETALERT2 OVERRIDES (แบรนดิ้งข้อความแจ้งเตือน)
-   ===================================================================== */
+/* SWEETALERT2 OVERRIDES */
 div:where(.swal2-container) h2:where(.swal2-title) {
   font-family: 'Prompt', sans-serif !important;
-  color: #2E7D32 !important;
+  color: var(--primary) !important;
 }
-
 div:where(.swal2-container) div:where(.swal2-html-container) {
   font-family: 'Sarabun', sans-serif !important;
   color: #4B5563 !important;
 }
-
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
-  background-color: #2E7D32 !important;
+  background-color: var(--primary) !important;
   font-family: 'Prompt', sans-serif !important;
   border-radius: 999px !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
 }
-
 div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
   background-color: #EF4444 !important;
   font-family: 'Prompt', sans-serif !important;
   border-radius: 999px !important;
 }
-
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
   box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3) !important;
 }
 
-/* =====================================================================
-   5. CUSTOM ANIMATIONS
-   ===================================================================== */
+/* CUSTOM ANIMATIONS */
 .fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
