@@ -24,13 +24,19 @@
       theme: {
         extend: {
           colors: {
-            primary: '#2E7D32',    // เขียวเข้ม
-            secondary: '#66BB6A',  // เขียวอ่อน
-            cream: '#F5F5DC'       // ครีมอ่อน
+            primary: '#2E7D32',      // เขียวเข้ม
+            primaryDark: '#1F5C24',  // เขียวเข้มเข้มขึ้น (สำหรับ hover)
+            secondary: '#66BB6A',    // เขียวอ่อน
+            pale: '#E8F5E9',         // เขียวพาสเทลอ่อนมาก (สำหรับพื้นหลังไอคอน/แถบ)
+            cream: '#FBF6EA',        // ครีมอ่อน (กรอบข้อมูล)
+            creamLine: '#EDE3CC'     // เส้นขอบครีมเข้มขึ้นเล็กน้อย
           },
           fontFamily: {
             title: ['Prompt', 'Kanit', 'sans-serif'],
             body: ['Sarabun', 'Prompt', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 20px 40px -22px rgba(22,40,26,0.30)'
           }
         }
       }
@@ -48,22 +54,22 @@
     <div id="view-landing" class="max-w-6xl mx-auto px-4 py-12 flex-1 w-full">
       <!-- ส่วนที่ 1: Header & Event Information -->
       <div class="text-center mb-10">
-        <h1 class="text-3xl md:text-5xl font-title text-primary mb-4 shadow-sm drop-shadow-md">Green Unity 2026</h1>
-        <p class="text-xl text-gray-900 font-bold drop-shadow-sm">รวมพลังภาคี ปลูกป่า สร้างอนาคตที่ยั่งยืน</p>
+        <h1 class="text-3xl md:text-5xl font-title font-extrabold text-primary mb-4 drop-shadow-md">Green Unity 2026</h1>
+        <p class="text-xl text-gray-900 font-semibold drop-shadow-sm">รวมพลังภาคี ปลูกป่า สร้างอนาคตที่ยั่งยืน</p>
         
         <!-- ข้อมูล วัน เวลา สถานที่ (Badges) -->
         <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-5 mt-8">
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-md flex items-center gap-2 border-2 border-green-100 hover:scale-105 transition-transform">
+          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
             <span class="text-lg">📅</span>
-            <span class="font-semibold text-gray-800 text-sm md:text-base">วันศุกร์ที่ 16 ตุลาคม 2569</span>
+            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">วันศุกร์ที่ 16 ตุลาคม 2569</span>
           </div>
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-md flex items-center gap-2 border-2 border-green-100 hover:scale-105 transition-transform">
+          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
             <span class="text-lg">🕗</span>
-            <span class="font-semibold text-gray-800 text-sm md:text-base">เวลา 08.00 – 13.00 น.</span>
+            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">เวลา 08.00 – 13.00 น.</span>
           </div>
-          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-md flex items-center gap-2 border-2 border-green-100 hover:scale-105 transition-transform">
+          <div class="bg-white/95 px-5 py-2.5 rounded-full shadow-soft flex items-center gap-2 border border-creamLine hover:scale-105 transition-transform">
             <span class="text-lg">📍</span>
-            <span class="font-semibold text-gray-800 text-sm md:text-base">ศูนย์ศึกษาธรรมชาติกองทัพบก บางปู จังหวัดสมุทรปราการ</span>
+            <span class="font-title font-semibold text-gray-800 text-sm md:text-base">ศูนย์ศึกษาธรรมชาติกองทัพบก บางปู จังหวัดสมุทรปราการ</span>
           </div>
         </div>
       </div>
@@ -71,14 +77,14 @@
       <!-- ส่วนที่ 2: Content Cards -->
       <div class="grid md:grid-cols-2 gap-8 items-stretch">
         <!-- Card แบบสำรวจ (อัปเดตคำชี้แจง) -->
-        <div class="border-4 border-cream p-8 rounded-2xl shadow-xl flex flex-col bg-white">
-          <h2 class="text-2xl md:text-3xl font-title text-primary mb-2">📝 แบบสำรวจผู้เข้าร่วมกิจกรรม</h2>
+        <div class="border border-creamLine p-8 rounded-2xl shadow-soft flex flex-col bg-cream/40">
+          <h2 class="text-2xl md:text-3xl font-title font-bold text-primary mb-2">📝 แบบสำรวจผู้เข้าร่วมกิจกรรม</h2>
           <p class="text-gray-700 font-semibold mb-2">กรุณากรอกข้อมูลเพื่อยืนยันการเข้าร่วมกิจกรรม</p>
           <div class="self-start bg-red-50 text-red-600 font-bold text-sm px-4 py-1.5 rounded-full mb-5 border border-red-100 shadow-sm">
             (1 ท่าน ต่อ 1 แบบฟอร์ม)
           </div>
 
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700 h-48 overflow-y-auto mb-4 leading-relaxed">
+          <div class="bg-white border border-creamLine rounded-lg p-4 text-sm text-gray-700 h-48 overflow-y-auto mb-4 leading-relaxed">
             <p class="font-bold mb-2 text-gray-900 underline">การขอความยินยอมในการประมวลผลข้อมูลส่วนบุคคล (PDPA)</p>
             "ข้าพเจ้ายินยอมให้ บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน) เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ได้แก่ ภาพถ่าย ภาพเคลื่อนไหว และ/หรือเสียง ที่ถูกบันทึกในระหว่างการเข้าร่วมกิจกรรมนอกสถานที่ เพื่อวัตถุประสงค์ในการนำไปใช้จัดทำสื่อประชาสัมพันธ์กิจกรรมขององค์กร ผ่านช่องทางสื่อสารต่างๆ ทั้งภายในและภายนอก (เช่น เว็บไซต์, โซเชียลมีเดีย, สื่อสิ่งพิมพ์) ทั้งนี้ ข้าพเจ้าได้รับทราบว่าสามารถใช้สิทธิขอถอนความยินยอมนี้ได้ในภายหลัง ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (Privacy Policy) ของบริษัทฯ โดยการถอนความยินยอมจะไม่ส่งผลกระทบต่อการใช้ข้อมูลที่ได้ดำเนินการไปแล้วก่อนหน้านั้น"
           </div>
@@ -86,24 +92,24 @@
             <input type="checkbox" id="chk-pdpa" class="mt-1 w-5 h-5 accent-primary rounded cursor-pointer border-gray-300">
             <span class="text-sm select-none font-semibold text-gray-800">ข้าพเจ้าอ่านรายละเอียดและกดยอมรับข้อตกลงความเป็นส่วนตัว (PDPA)</span>
           </label>
-          <button onclick="handleStartSurvey()" class="mt-auto w-full bg-primary hover:bg-green-800 text-white font-title py-3.5 rounded-xl shadow-md transition duration-200 text-lg">เริ่มทำแบบสำรวจ</button>
+          <button onclick="handleStartSurvey()" class="mt-auto w-full bg-primary hover:bg-primaryDark text-white font-title font-bold py-3.5 rounded-full shadow-soft transition duration-200 text-lg">เริ่มทำแบบสำรวจ</button>
         </div>
         
         <!-- Card สำหรับ Admin -->
-        <div class="border-4 border-cream p-8 rounded-2xl shadow-xl flex flex-col bg-white">
-          <h2 class="text-2xl font-title text-gray-800 mb-4">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
+        <div class="border border-creamLine p-8 rounded-2xl shadow-soft flex flex-col bg-cream/40">
+          <h2 class="text-2xl font-title font-bold text-gray-800 mb-4">🔒 พื้นที่ผู้ดูแลระบบ (Admin)</h2>
           <p class="text-sm text-gray-600 mb-4 font-semibold">สำหรับเข้าตรวจดู Dashboard รายงานสถิติยอดผู้ลงทะเบียนรวม</p>
           <div class="space-y-4 mb-6">
             <div>
               <label class="block text-xs font-semibold mb-1 text-gray-700">Username</label>
-              <input type="text" id="admin-user" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary outline-none bg-gray-50 transition-shadow">
+              <input type="text" id="admin-user" class="w-full p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow">
             </div>
             <div>
               <label class="block text-xs font-semibold mb-1 text-gray-700">Password</label>
-              <input type="password" id="admin-pass" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary outline-none bg-gray-50 transition-shadow">
+              <input type="password" id="admin-pass" class="w-full p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow">
             </div>
           </div>
-          <button onclick="handleAdminLogin()" class="mt-auto w-full bg-gray-800 hover:bg-gray-950 text-white font-title py-3.5 rounded-xl shadow-md transition duration-200 text-lg">เข้าสู่ระบบ Dashboard</button>
+          <button onclick="handleAdminLogin()" class="mt-auto w-full bg-gray-800 hover:bg-gray-950 text-white font-title font-bold py-3.5 rounded-full shadow-soft transition duration-200 text-lg">เข้าสู่ระบบ Dashboard</button>
         </div>
       </div>
     </div>
@@ -111,7 +117,7 @@
     <!-- ================= หน้าที่ 2: FORM INPUTS (ซ่อนไว้ตอนเริ่มต้น) ================= -->
     <!-- Layer 3: แบบฟอร์มลอยอยู่บนสุด -->
     <div id="view-form" class="max-w-4xl mx-auto px-4 py-12 hidden fade-in w-full">
-      <div class="bg-white border-2 border-cream rounded-2xl p-6 md:p-10 shadow-2xl relative">
+      <div class="bg-white border border-creamLine rounded-2xl p-6 md:p-10 shadow-soft relative">
          <!-- Javascript จาก app.js จะนำโครงสร้างฟอร์มมาใส่ใน div นี้ -->
       </div>
     </div>

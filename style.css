@@ -13,7 +13,7 @@ html {
 body {
   /* ฟอนต์หลักสำหรับเนื้อหาทั่วไป */
   font-family: 'Sarabun', sans-serif;
-  background-color: #F9FAFB;
+  background-color: #FFFFFF;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5, h6, .font-title {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #FBF6EA; /* ครีมอ่อน */
   border-radius: 4px;
 }
 
@@ -60,14 +60,14 @@ div:where(.swal2-container) div:where(.swal2-html-container) {
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
   background-color: #2E7D32 !important;
   font-family: 'Prompt', sans-serif !important;
-  border-radius: 0.5rem !important;
+  border-radius: 999px !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
 }
 
 div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
   background-color: #EF4444 !important;
   font-family: 'Prompt', sans-serif !important;
-  border-radius: 0.5rem !important;
+  border-radius: 999px !important;
 }
 
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {

@@ -40,20 +40,20 @@ function renderSurveyForm() {
         <div class="space-y-6">
           <div>
             <label class="block font-semibold mb-1">1. ชื่อ-นามสกุลผู้ประสานงาน <span class="text-red-500">*</span></label>
-            <input type="text" id="inp-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+            <input type="text" id="inp-name" required class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
           </div>
           
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <label class="block font-semibold mb-1">2. ประเภทองค์กรหรือหน่วยงาน <span class="text-red-500">*</span></label>
-              <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+              <select id="sel-org-type" required onchange="handleOrgTypeChange(this.value)" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
                 <option value="">-- เลือกประเภทองค์กร --</option>
                 ${Object.keys(orgOptionsMapping).map(type => `<option value="${type}">${type}</option>`).join('')}
               </select>
             </div>
             <div>
               <label class="block font-semibold mb-1">3. ชื่อองค์กร หมู่บ้าน หรือหน่วยงาน <span class="text-red-500">*</span></label>
-              <select id="sel-org-name" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+              <select id="sel-org-name" required class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
                 <option value="">-- กรุณาเลือกประเภทองค์กรก่อน --</option>
               </select>
             </div>
@@ -61,23 +61,23 @@ function renderSurveyForm() {
           
           <div id="div-other-org" class="hidden">
             <label class="block font-semibold mb-1">4. ระบุชื่อองค์กรหรือหน่วยงานเพิ่มเติม <span class="text-red-500">*</span></label>
-            <input type="text" id="inp-other-org" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+            <input type="text" id="inp-other-org" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
           </div>
           
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <label class="block font-semibold mb-1">5. เบอร์โทรศัพท์ผู้ประสานงาน <span class="text-red-500">*</span></label>
-              <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+              <input type="tel" id="inp-phone" required placeholder="เช่น 0812345678" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
               <p class="text-xs text-gray-400 mt-1">กรอกตัวเลขติดกันความยาว 9-10 หลัก (ไม่ต้องใส่เครื่องหมายขีด)</p>
             </div>
             <div>
               <label class="block font-semibold mb-1">6. อีเมลผู้ประสานงาน (ถ้ามี)</label>
-              <input type="email" id="inp-email" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+              <input type="email" id="inp-email" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
             </div>
           </div>
         </div>
-        <div class="flex justify-end pt-6 mt-8 border-t border-gray-100">
-          <button type="button" onclick="validateAndNext(2)" class="bg-primary hover:bg-green-800 text-white font-title py-3 px-10 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>
+        <div class="flex justify-end pt-6 mt-8 border-t border-creamLine">
+          <button type="button" onclick="validateAndNext(2)" class="bg-primary hover:bg-primaryDark text-white font-title py-3 px-10 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>
         </div>
       </div>
 
@@ -105,12 +105,12 @@ function renderSurveyForm() {
           <div id="dynamic-intent-section" class="mt-6"></div>
         </div>
 
-        <div class="flex gap-4 pt-6 mt-8 border-t border-gray-100">
-          <button type="button" onclick="goToStep(1)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-xl transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
+        <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
+          <button type="button" onclick="goToStep(1)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-full transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
           
           <!-- ปุ่มฝั่งขวาจะแปรผันตามเงื่อนไข (ถัดไป หรือ ส่งข้อมูล) -->
           <div id="step-2-actions" class="w-2/3 flex">
-            <button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>
+            <button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>
           </div>
         </div>
       </div>
@@ -119,18 +119,18 @@ function renderSurveyForm() {
       <div id="step-3" class="hidden transition-all duration-300">
         <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 3: จำนวนและรายชื่อผู้เข้าร่วม</h2>
         <div class="space-y-6">
-          <div class="bg-green-50/50 border-2 border-dashed border-green-300 rounded-xl p-5">
+          <div class="bg-pale/60 border-2 border-dashed border-secondary rounded-xl p-5">
             <label class="block font-semibold text-lg text-primary mb-1">8. จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
             <p class="text-sm text-gray-600 mb-4 font-semibold">กรุณาระบุจำนวนรวมผู้เข้าร่วมทั้งหมด รวมผู้ประสานงานด้วย หากผู้ประสานงานเข้าร่วมกิจกรรม (ขั้นต่ำ 1 คน, สูงสุด 50 คน)</p>
-            <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" class="w-full md:w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-primary outline-none font-bold text-lg text-center" placeholder="ระบุจำนวนคน">
+            <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" class="w-full md:w-1/3 p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none font-bold text-lg text-center" placeholder="ระบุจำนวนคน">
           </div>
           
           <div id="participants-list" class="space-y-4"></div>
         </div>
 
-        <div class="flex gap-4 pt-6 mt-8 border-t border-gray-100">
-          <button type="button" onclick="goToStep(2)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-xl transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
-          <button type="submit" class="w-2/3 bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>
+        <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
+          <button type="button" onclick="goToStep(2)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-full transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
+          <button type="submit" class="w-2/3 bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>
         </div>
       </div>
 
@@ -207,22 +207,22 @@ function handleIntentChange(val) {
 
   if (val === "เข้าร่วมกิจกรรม") {
     // เปลี่ยนปุ่มเป็น ถัดไป เพื่อเข้าสู่ Step 3
-    actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-green-800 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ถัดไป ➔</button>`;
+    actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>`;
   } else {
     // เปลี่ยนปุ่มเป็น ส่งข้อมูล 
-    actionsContainer.innerHTML = `<button type="submit" class="w-full bg-secondary hover:bg-green-600 text-white font-title py-3 rounded-xl shadow transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
+    actionsContainer.innerHTML = `<button type="submit" class="w-full bg-secondary hover:bg-primary text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
     
     if (val === "ยังไม่แน่ใจ") {
       container.innerHTML = `
         <div class="border-2 border-dashed border-yellow-300 rounded-xl p-5 bg-yellow-50/50">
           <label class="block font-semibold mb-1">จำนวนผู้เข้าร่วมโดยประมาณ (ท่าน) <span class="text-red-500">*</span></label>
-          <input type="number" id="inp-est-part" min="1" required class="w-full md:w-1/3 p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none">
+          <input type="number" id="inp-est-part" min="1" required class="w-full md:w-1/3 p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
         </div>`;
     } else if (val === "ไม่สามารถเข้าร่วมกิจกรรม") {
       container.innerHTML = `
         <div class="border-2 border-dashed border-red-300 rounded-xl p-5 bg-red-50/50">
           <label class="block font-semibold mb-1">เหตุผลหรือข้อเสนอแนะเพิ่มเติม</label>
-          <textarea id="txt-feedback" rows="3" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="ระบุเหตุผล หรือข้อคิดเห็นเพิ่มเติมที่นี่..."></textarea>
+          <textarea id="txt-feedback" rows="3" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none" placeholder="ระบุเหตุผล หรือข้อคิดเห็นเพิ่มเติมที่นี่..."></textarea>
         </div>`;
     }
   }
@@ -242,16 +242,16 @@ function generateParticipantRows(countStr) {
 
   for (let i = 1; i <= count; i++) {
     const row = document.createElement("div");
-    row.className = "grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-5 border-2 border-gray-100 rounded-xl shadow-sm relative";
+    row.className = "grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-5 border border-creamLine rounded-2xl shadow-soft relative";
     row.innerHTML = `
       <div class="absolute -top-3 -left-3 bg-primary text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shadow">${i}</div>
       <div class="md:col-span-2 pl-4 md:pl-2">
         <label class="block text-xs font-semibold text-gray-500 mb-1">ชื่อ-นามสกุลผู้ร่วมเดินทาง <span class="text-red-500">*</span></label>
-        <input type="text" name="part-name" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+        <input type="text" name="part-name" required class="w-full p-2 border border-creamLine rounded-md outline-none focus:ring-1 focus:ring-secondary bg-cream/30">
       </div>
       <div>
         <label class="block text-xs font-semibold text-gray-500 mb-1">ขนาดเสื้อ <span class="text-red-500">*</span></label>
-        <select name="part-shirt" required class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+        <select name="part-shirt" required class="w-full p-2 border border-creamLine rounded-md outline-none focus:ring-1 focus:ring-secondary bg-cream/30">
           <option value="S">S (รอบอก 36")</option>
           <option value="M">M (รอบอก 38")</option>
           <option value="L">L (รอบอก 40")</option>
@@ -262,7 +262,7 @@ function generateParticipantRows(countStr) {
       </div>
       <div>
         <label class="block text-xs font-semibold text-gray-500 mb-1">ข้อจำกัดอาหาร</label>
-        <input type="text" name="part-health" placeholder="เช่น มังสวิรัติ, แพ้กุ้ง" class="w-full p-2 border rounded-md outline-none focus:ring-1 focus:ring-primary bg-gray-50">
+        <input type="text" name="part-health" placeholder="เช่น มังสวิรัติ, แพ้กุ้ง" class="w-full p-2 border border-creamLine rounded-md outline-none focus:ring-1 focus:ring-secondary bg-cream/30">
       </div>
     `;
     list.appendChild(row);
@@ -350,8 +350,8 @@ function handleAdminLogin() {
 function loadAdminDashboard() {
   const adminView = document.getElementById("view-admin");
   adminView.innerHTML = `
-    <div class="w-64 bg-gray-900 text-white flex flex-col p-5 space-y-4">
-      <div class="text-xl font-title text-secondary border-b border-gray-700 pb-3">Green Unity Panel</div>
+    <div class="w-64 bg-[#173B1A] text-white flex flex-col p-5 space-y-4">
+      <div class="text-xl font-title text-secondary border-b border-white/10 pb-3">Green Unity Panel</div>
       <button class="text-left py-2 px-3 bg-primary rounded-lg text-sm font-semibold">📈 สถิติการลงทะเบียน</button>
       <button onclick="location.reload()" class="mt-auto text-left py-2 px-3 bg-red-700 hover:bg-red-800 rounded-lg text-sm font-semibold transition">ออกจากระบบ</button>
     </div>
@@ -360,13 +360,13 @@ function loadAdminDashboard() {
       <h2 class="text-3xl font-title text-gray-800">แดชบอร์ดสรุปผลการสำรวจ</h2>
       
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-blue-500 flex flex-col"><span class="text-xs text-gray-500 font-semibold">หน่วยงานร่วมใจ</span><span class="text-2xl font-bold mt-2" id="stat-orgs">...</span></div>
-        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-emerald-500 flex flex-col"><span class="text-xs text-gray-500 font-semibold">รวมผู้เข้าร่วม (คน)</span><span class="text-2xl font-bold mt-2" id="stat-parts">...</span></div>
-        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-orange-500 flex flex-col"><span class="text-xs text-gray-500 font-semibold">ยอดจัดผลิตเสื้อ</span><span class="text-2xl font-bold mt-2" id="stat-shirts">...</span></div>
-        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-purple-500 flex flex-col"><span class="text-xs text-gray-500 font-semibold">ข้อจำกัดด้านอาหาร</span><span class="text-2xl font-bold mt-2" id="stat-food">...</span></div>
+        <div class="bg-white p-5 rounded-2xl shadow-soft border-l-4 border-primary flex flex-col"><span class="text-xs text-gray-500 font-semibold">หน่วยงานร่วมใจ</span><span class="text-2xl font-bold mt-2" id="stat-orgs">...</span></div>
+        <div class="bg-white p-5 rounded-2xl shadow-soft border-l-4 border-secondary flex flex-col"><span class="text-xs text-gray-500 font-semibold">รวมผู้เข้าร่วม (คน)</span><span class="text-2xl font-bold mt-2" id="stat-parts">...</span></div>
+        <div class="bg-white p-5 rounded-2xl shadow-soft border-l-4 border-primaryDark flex flex-col"><span class="text-xs text-gray-500 font-semibold">ยอดจัดผลิตเสื้อ</span><span class="text-2xl font-bold mt-2" id="stat-shirts">...</span></div>
+        <div class="bg-white p-5 rounded-2xl shadow-soft border-l-4 border-gray-400 flex flex-col"><span class="text-xs text-gray-500 font-semibold">ข้อจำกัดด้านอาหาร</span><span class="text-2xl font-bold mt-2" id="stat-food">...</span></div>
       </div>
       
-      <div class="bg-white p-6 rounded-xl shadow border max-w-2xl mt-6">
+      <div class="bg-white p-6 rounded-2xl shadow-soft border border-creamLine max-w-2xl mt-6">
         <h3 class="font-title text-gray-700 mb-4 text-lg">สัดส่วนขนาดเสื้อที่ลงทะเบียน</h3>
         <canvas id="shirtChart" width="400" height="200"></canvas>
       </div>
