@@ -220,27 +220,8 @@ document.addEventListener('change', (e) => {
         const detailInput = document.getElementById(`p_diet_detail_${index}`);
         
         if (detailContainer && detailInput) {
-            const requireDetail = ["แพ้อาหารทะเล", "แพ้ถั่ว", "แพ้นม", "อื่นๆ"].includes(val);
+            const requireDetail = ["แพ้อาหารทะเล", "อื่นๆ"].includes(val);
             if (requireDetail) {
-                detailContainer.classList.remove('hidden');
-                detailInput.setAttribute('required', 'true');
-            } else {
-                detailContainer.classList.add('hidden');
-                detailInput.removeAttribute('required');
-                detailInput.value = ''; 
-            }
-        }
-    }
-    
-    // Handler สำหรับโรคประจำตัว
-    if (e.target.classList.contains('disease-radio')) {
-        const val = e.target.value;
-        const index = e.target.getAttribute('data-index');
-        const detailContainer = document.getElementById(`disease_detail_container_${index}`);
-        const detailInput = document.getElementById(`p_disease_detail_${index}`);
-        
-        if (detailContainer && detailInput) {
-            if (val === 'มี') {
                 detailContainer.classList.remove('hidden');
                 detailInput.setAttribute('required', 'true');
             } else {
@@ -297,36 +278,14 @@ function generateParticipantRows(countStr) {
                   <option value="" disabled selected>-- เลือกข้อมูล --</option>
                   <option value="ไม่มี">ไม่มี</option>
                   <option value="แพ้อาหารทะเล">แพ้อาหารทะเล</option>
-                  <option value="แพ้ถั่ว">แพ้ถั่ว</option>
-                  <option value="แพ้นม">แพ้นม</option>
                   <option value="อื่นๆ">อื่น ๆ</option>
               </select>
-          </div>
-          
-          <div class="col-span-1 md:col-span-1">
-              <label class="block text-sm font-semibold text-gray-700 mb-1">12. มีโรคประจำตัว/ข้อจำกัดการทำกิจกรรมกลางแจ้งหรือไม่ <span class="text-red-500">*</span></label>
-              <div class="flex gap-6 mt-3">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="has_disease_${i}" value="ไม่มี" class="w-4 h-4 accent-primary disease-radio" data-index="${i}" required> 
-                  <span class="text-gray-700">ไม่มี</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="has_disease_${i}" value="มี" class="w-4 h-4 accent-primary disease-radio" data-index="${i}"> 
-                  <span class="text-gray-700">มี</span>
-                </label>
-              </div>
           </div>
 
           <!-- กล่องรายละเอียดอาหาร -->
           <div id="diet_detail_container_${i}" class="col-span-1 md:col-span-2 hidden bg-red-50 p-3 rounded-lg border border-red-100">
               <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดเพิ่มเติมเกี่ยวกับอาหาร <span class="text-red-500">*</span></label>
               <input type="text" name="part-diet-detail" id="p_diet_detail_${i}" class="w-full border border-red-200 p-2.5 rounded-lg focus:ring-2 focus:ring-red-400 outline-none" placeholder="ตัวอย่าง: แพ้กุ้งและปู, ไม่รับประทานเนื้อวัว">
-          </div>
-
-          <!-- กล่องรายละเอียดโรคประจำตัว -->
-          <div id="disease_detail_container_${i}" class="col-span-1 md:col-span-2 hidden bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-              <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดโรคประจำตัวหรือข้อจำกัด <span class="text-red-500">*</span></label>
-              <input type="text" name="part-disease-detail" id="p_disease_detail_${i}" class="w-full border border-yellow-200 p-2.5 rounded-lg focus:ring-2 focus:ring-yellow-400 outline-none" placeholder="ตัวอย่าง: โรคหอบหืด, ไม่สามารถยืนเป็นเวลานานได้">
           </div>
       </div>
     `;
@@ -400,12 +359,7 @@ function executeDataSubmission(intent, totalPart) {
         const diet = row.querySelector('select[name="part-diet"]').value;
         const dietDetail = row.querySelector('input[name="part-diet-detail"]').value.trim();
         
-        // ดึงข้อมูลโรคประจำตัวแบบแยกบุคคล
-        const diseaseCheck = row.querySelector(`input[name="has_disease_${pIndex}"]:checked`);
-        const hasDisease = diseaseCheck ? diseaseCheck.value : "ไม่มี";
-        const diseaseDetail = row.querySelector(`input[id="p_disease_detail_${pIndex}"]`).value.trim();
-
-        payload.participants.push({ name, shirtSize, diet, dietDetail, hasDisease, diseaseDetail });
+        payload.participants.push({ name, shirtSize, diet, dietDetail });
         pIndex++;
       }
     }
@@ -486,9 +440,7 @@ function loadAdminDashboard() {
           <button onclick="switchTab('logistics'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
             <span>👕</span> เสื้อและอาหาร
           </button>
-          <button onclick="switchTab('demographics'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
-            <span>👥</span> ข้อมูลผู้เข้าร่วม
-          </button>
+          <!-- ลบแท็บข้อมูลผู้เข้าร่วมออกตามที่ร้องขอ -->
           <button onclick="switchTab('datatable'); toggleSidebar();" class="tab-btn w-full text-left py-3 px-4 hover:bg-white/10 rounded-xl font-semibold transition flex items-center gap-3">
             <span>📇</span> ค้นหารายชื่อ
           </button>
@@ -529,7 +481,8 @@ function loadAdminDashboard() {
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สัดส่วนประเภทหน่วยงาน</h3>
-              <div class="h-64 flex justify-center"><canvas id="orgChart"></canvas></div>
+              <!-- ปรับ Container เป็น relative w-full แก้กราฟแท่งหดตัว -->
+              <div class="h-64 relative w-full"><canvas id="orgChart"></canvas></div>
             </div>
           </div>
         </div>
@@ -538,7 +491,7 @@ function loadAdminDashboard() {
           <div class="grid lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สรุปจำนวนเสื้อแยกตามไซซ์</h3>
-              <div class="h-64 flex justify-center"><canvas id="shirtChart"></canvas></div>
+              <div class="h-64 relative w-full"><canvas id="shirtChart"></canvas></div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <h3 class="font-title font-bold text-gray-700 mb-4 text-center">ข้อจำกัดด้านอาหาร</h3>
@@ -547,17 +500,7 @@ function loadAdminDashboard() {
           </div>
         </div>
 
-        <div id="tab-demographics" class="tab-content hidden space-y-6">
-          <div class="grid lg:grid-cols-2 gap-6">
-             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-               <h3 class="font-title font-bold text-gray-700 mb-4 text-center">สัดส่วนผู้เข้าร่วมแยกตามช่วงวัย</h3>
-               <div class="h-64 flex justify-center"><canvas id="demoChart"></canvas></div>
-             </div>
-             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center">
-               <p class="text-gray-400 font-semibold">พื้นที่สำหรับส่วนขยายเพิ่มเติม</p>
-             </div>
-          </div>
-        </div>
+        <!-- ตัด Tab ข้อมูลผู้เข้าร่วม (Demographics) ออกทั้งหมด -->
 
         <div id="tab-datatable" class="tab-content hidden space-y-4">
            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -616,11 +559,49 @@ function loadAdminDashboard() {
         const barOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } };
 
         new Chart(document.getElementById('intentChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ยืนยันเข้าร่วม', 'ไม่เข้าร่วม'], datasets: [{ data: [d.intent?.joined || 0, d.intent?.declined || 0], backgroundColor: ['#2E7D32', '#D32F2F'], borderWidth: 0 }] }, options: commonOptions });
-        new Chart(document.getElementById('orgChart').getContext('2d'), { type: 'bar', data: { labels: ['ชุมชน', 'ลูกค้า/คู่ค้า', 'สถานศึกษา', 'ภาครัฐ'], datasets: [{ data: [d.orgStats?.village || 0, d.orgStats?.customer || 0, d.orgStats?.school || 0, d.orgStats?.gov || 0], backgroundColor: ['#66BB6A', '#42A5F5', '#FFA726', '#AB47BC'], borderRadius: 4 }] }, options: barOptions });
+        
+        // คำนวณองค์กรอื่น ๆ (ที่ไม่ได้อยู่ใน 4 หมวดหมู่หลัก) เพื่อให้กราฟแสดงผลถูกต้อง
+        const village = d.orgStats?.village || 0;
+        const customer = d.orgStats?.customer || 0;
+        const school = d.orgStats?.school || 0;
+        const gov = d.orgStats?.gov || 0;
+        const totalOrgs = d.summary?.totalOrgs || 0;
+        const otherOrgs = Math.max(0, totalOrgs - (village + customer + school + gov));
+
+        new Chart(document.getElementById('orgChart').getContext('2d'), { 
+            type: 'bar', 
+            data: { 
+                labels: ['ชุมชน', 'ลูกค้า/คู่ค้า', 'สถานศึกษา', 'ภาครัฐ', 'อื่นๆ'], 
+                datasets: [{ 
+                    data: [village, customer, school, gov, otherOrgs], 
+                    backgroundColor: ['#66BB6A', '#42A5F5', '#FFA726', '#AB47BC', '#78909C'], 
+                    borderRadius: 4 
+                }] 
+            }, 
+            options: barOptions 
+        });
+        
         const shirtLabels = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
         new Chart(document.getElementById('shirtChart').getContext('2d'), { type: 'bar', data: { labels: shirtLabels, datasets: [{ data: shirtLabels.map(size => d.logistics?.shirts[size] || 0), backgroundColor: '#81C784', borderRadius: 4 }] }, options: barOptions });
-        new Chart(document.getElementById('foodChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ฮาลาล', 'มังสวิรัติ', 'แพ้อาหาร'], datasets: [{ data: [d.logistics?.halal || 0, d.logistics?.veg || 0, d.logistics?.allergy || 0], backgroundColor: ['#4CAF50', '#8BC34A', '#FF7043'], borderWidth: 0 }] }, options: commonOptions });
-        new Chart(document.getElementById('demoChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ผู้ใหญ่', 'เด็ก', 'ผู้สูงอายุ'], datasets: [{ data: [d.demographics?.adult || 0, d.demographics?.child || 0, d.demographics?.elder || 0], backgroundColor: ['#388E3C', '#66BB6A', '#FFCA28'], borderWidth: 0 }] }, options: commonOptions });
+        
+        // ปรับกราฟอาหารให้เหลือแค่ 2 สัดส่วน (ไม่มีข้อจำกัด vs มีข้อจำกัดแพ้อาหาร)
+        const limitFood = d.summary?.totalFoodLimits || 0;
+        const noLimitFood = Math.max(0, (d.summary?.totalParts || 0) - limitFood);
+
+        new Chart(document.getElementById('foodChart').getContext('2d'), { 
+            type: 'doughnut', 
+            data: { 
+                labels: ['ไม่มีข้อจำกัด', 'มีข้อจำกัด (แพ้อาหาร/อื่นๆ)'], 
+                datasets: [{ 
+                    data: [noLimitFood, limitFood], 
+                    backgroundColor: ['#E0E0E0', '#FF7043'], 
+                    borderWidth: 0 
+                }] 
+            }, 
+            options: commonOptions 
+        });
+
+        // ลบโค้ด new Chart สำหรับ demoChart ออก
 
         tableData = d.registrations || [];
         filteredData = [...tableData];
@@ -677,8 +658,7 @@ function renderTable() {
           `;
           
           if (hasParticipants) {
-             // อัปเดต: นำ <th>ประเภท</th> ออกจากตารางย่อยเพื่อให้สอดคล้องกับข้อมูลใหม่
-             let partHtml = `<table class="w-full text-sm text-left"><tr class="text-gray-500 border-b border-gray-200"><th>ชื่อ-นามสกุล</th><th>ไซซ์เสื้อ</th><th>อาหาร</th></tr>`;
+             let partHtml = `<table class="w-full text-sm text-left"><tr class="text-gray-500 border-b border-gray-200"><th>ชื่อ-นามสกุล</th><th>ไซส์เสื้อ</th><th>แพ้อาหาร</th></tr>`;
              row.participants.forEach(p => {
                  partHtml += `<tr class="border-b border-gray-100/50"><td class="py-2">${p.name || "-"}</td><td>${p.shirt || p.shirtSize || "-"}</td><td>${p.diet || "-"}</td></tr>`;
              });
