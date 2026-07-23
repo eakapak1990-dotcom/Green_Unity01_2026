@@ -7,6 +7,7 @@ const orgOptionsMapping = {
   "ลูกค้าของบริษัท": ["ลูกค้าและคู่ค้าทางธุรกิจ", "ลูกค้าของบริษัท"],
   "ผู้ขายและผู้รับเหมาธุรกิจ": ["ผู้ขายและผู้รับเหมาธุรกิจ"],
   "คู่ค้าหลักขององค์กร": ["คู่ค้าหลักขององค์กร"],
+  "พนักงานบริษัท": ["บริษัท ยูนีค พลาสติก อินดัสตรีส์ จำกัด (มหาชน)"],
   "ชุมชนโดยรอบ": ["ชุมชนโดยรอบในรัศมี 5 กิโลเมตร", "หมู่บ้านพฤกษา 15", "หมู่บ้านกล่อมพิรุณ", "หมู่บ้านเพชรงาม", "หมู่บ้านจิระภา 2", "หมู่บ้านนาคพิรุณ", "หมู่บ้านรินทิชา", "หมู่บ้านเฟื่องฟ้า 11", "หมู่บ้านพนาสนธิ์วิลล่า", "หมู่บ้านมั่นคง"],
   "สถานศึกษา": ["สถานศึกษา", "โรงเรียนวัดคลองเก้า", "โรงเรียนวัดแพรกษา"],
   "หน่วยงานภาครัฐ": ["หน่วยงานภาครัฐ", "เทศบาลตำบลแพรกษาใหม่", "ศูนย์ศึกษาธรรมชาติกองทัพบก บางปู"],
@@ -93,12 +94,8 @@ function renderSurveyForm() {
                 <span>เข้าร่วมกิจกรรม</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="rad-intent" value="ยังไม่แน่ใจ" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-                <span>ยังไม่แน่ใจ</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="rad-intent" value="ไม่สามารถเข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
-                <span>ไม่สามารถเข้าร่วมกิจกรรม</span>
+                <input type="radio" name="rad-intent" value="ไม่เข้าร่วมกิจกรรม" onchange="handleIntentChange(this.value)" class="w-5 h-5 accent-primary">
+                <span>ไม่เข้าร่วมกิจกรรม</span>
               </label>
             </div>
           </div>
@@ -108,16 +105,15 @@ function renderSurveyForm() {
         <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
           <button type="button" onclick="goToStep(1)" class="w-1/3 bg-gray-200 hover:bg-gray-300 font-title py-3 rounded-full transition duration-200 text-lg text-gray-700">ย้อนกลับ</button>
           
-          <!-- ปุ่มฝั่งขวาจะแปรผันตามเงื่อนไข (ถัดไป หรือ ส่งข้อมูล) -->
           <div id="step-2-actions" class="w-2/3 flex">
             <button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>
           </div>
         </div>
       </div>
 
-      <!-- ================= STEP 3: จำนวนและรายชื่อผู้เข้าร่วม (รวมส่วนที่ 4 และ 5) ================= -->
+      <!-- ================= STEP 3: จำนวนและรายชื่อผู้เข้าร่วม ================= -->
       <div id="step-3" class="hidden transition-all duration-300">
-        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 3-5: รายละเอียดผู้เข้าร่วมและข้อมูลด้านความปลอดภัย</h2>
+        <h2 class="text-2xl font-title text-primary border-b-2 border-cream pb-3 mb-6">ส่วนที่ 3: รายละเอียดผู้เข้าร่วม</h2>
         <div class="space-y-6">
           <div class="bg-pale/60 border-2 border-dashed border-secondary rounded-xl p-5">
             <label class="block font-semibold text-lg text-primary mb-1">8. จำนวนผู้เข้าร่วมทั้งหมด <span class="text-red-500">*</span></label>
@@ -125,44 +121,9 @@ function renderSurveyForm() {
             <input type="number" id="inp-total-part" min="1" max="50" oninput="generateParticipantRows(this.value)" class="w-full md:w-1/3 p-3 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none font-bold text-lg text-center" placeholder="ระบุจำนวนคน" required>
           </div>
           
-          <!-- ส่วนที่ 4: รายชื่อผู้เข้าร่วม (Dynamic Container) -->
+          <!-- รายชื่อผู้เข้าร่วม (Dynamic Container) -->
           <div id="participants-list" class="space-y-4"></div>
 
-          <!-- ส่วนที่ 5 ข้อมูลสุขภาพและความปลอดภัย -->
-          <div id="section-5" class="p-5 mt-6 border border-creamLine rounded-xl shadow-sm bg-cream/20">
-            <h3 class="text-lg font-title font-bold text-gray-800 mb-3 border-b border-creamLine pb-2">ส่วนที่ 5 ข้อมูลสุขภาพและความปลอดภัย</h3>
-            
-            <div class="mb-4">
-              <label class="block font-semibold mb-2 text-gray-700">14. มีผู้เข้าร่วมที่มีโรคประจำตัวหรือข้อจำกัดในการทำกิจกรรมกลางแจ้งหรือไม่ <span class="text-red-500">*</span></label>
-              <div class="flex gap-6 mt-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="has_disease" value="ไม่มี" onchange="toggleDiseaseDetails(this.value)" class="w-4 h-4 accent-primary" required> 
-                  <span class="text-gray-700">ไม่มี</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="has_disease" value="มี" onchange="toggleDiseaseDetails(this.value)" class="w-4 h-4 accent-primary"> 
-                  <span class="text-gray-700">มี</span>
-                </label>
-              </div>
-            </div>
-
-            <div id="disease_details_container" class="mb-4 hidden bg-white p-4 rounded-lg border border-creamLine">
-              <label class="block font-semibold mb-1 text-gray-700">15. รายละเอียดโรคประจำตัวหรือข้อจำกัด <span class="text-red-500">*</span></label>
-              <textarea id="disease_details" name="disease_details" rows="3" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none transition-shadow" placeholder="ตัวอย่าง: ผู้เข้าร่วมลำดับที่ 3 เป็นโรคหอบหืด, ลำดับที่ 5 ไม่สามารถยืนนานได้"></textarea>
-              <p class="text-sm text-gray-500 mt-1">กรุณาระบุเฉพาะข้อมูลที่จำเป็นต่อการดูแลความปลอดภัยในวันจัดกิจกรรม</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="mb-2">
-                <label class="block font-semibold mb-1 text-gray-700">16. ผู้ติดต่อกรณีฉุกเฉิน <span class="text-red-500">*</span></label>
-                <input type="text" id="emergency_contact" name="emergency_contact" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow" placeholder="ชื่อ-นามสกุล">
-              </div>
-              <div class="mb-2">
-                <label class="block font-semibold mb-1 text-gray-700">17. เบอร์โทรศัพท์กรณีฉุกเฉิน <span class="text-red-500">*</span></label>
-                <input type="tel" id="emergency_phone" name="emergency_phone" class="w-full border border-creamLine p-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white transition-shadow" placeholder="08X-XXX-XXXX">
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="flex gap-4 pt-6 mt-8 border-t border-creamLine">
@@ -240,43 +201,18 @@ function handleOrgTypeChange(val) {
 function handleIntentChange(val) {
   const container = document.getElementById("dynamic-intent-section");
   const actionsContainer = document.getElementById("step-2-actions");
+  
   container.innerHTML = "";
 
   if (val === "เข้าร่วมกิจกรรม") {
     actionsContainer.innerHTML = `<button type="button" onclick="validateAndNext(3)" class="w-full bg-primary hover:bg-primaryDark text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ถัดไป ➔</button>`;
   } else {
-    actionsContainer.innerHTML = `<button type="submit" class="w-full bg-secondary hover:bg-primary text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
-    
-    if (val === "ยังไม่แน่ใจ") {
-      container.innerHTML = `
-        <div class="border-2 border-dashed border-yellow-300 rounded-xl p-5 bg-yellow-50/50">
-          <label class="block font-semibold mb-1">จำนวนผู้เข้าร่วมโดยประมาณ (ท่าน) <span class="text-red-500">*</span></label>
-          <input type="number" id="inp-est-part" min="1" required class="w-full md:w-1/3 p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none">
-        </div>`;
-    } else if (val === "ไม่สามารถเข้าร่วมกิจกรรม") {
-      container.innerHTML = `
-        <div class="border-2 border-dashed border-red-300 rounded-xl p-5 bg-red-50/50">
-          <label class="block font-semibold mb-1">เหตุผลหรือข้อเสนอแนะเพิ่มเติม</label>
-          <textarea id="txt-feedback" rows="3" class="w-full p-2.5 border border-creamLine rounded-lg focus:ring-2 focus:ring-secondary outline-none" placeholder="ระบุเหตุผล หรือข้อคิดเห็นเพิ่มเติมที่นี่..."></textarea>
-        </div>`;
-    }
-  }
-}
-
-function toggleDiseaseDetails(val) {
-  const container = document.getElementById('disease_details_container');
-  const textarea = document.getElementById('disease_details');
-  if (val === 'มี') {
-    container.classList.remove('hidden');
-    textarea.setAttribute('required', 'true');
-  } else {
-    container.classList.add('hidden');
-    textarea.removeAttribute('required');
-    textarea.value = '';
+    actionsContainer.innerHTML = `<button type="button" onclick="submitSurvey(event)" class="w-full bg-secondary hover:bg-primary text-white font-title py-3 rounded-full shadow-soft transition duration-200 text-lg">ส่งข้อมูลแบบสำรวจ</button>`;
   }
 }
 
 document.addEventListener('change', (e) => {
+    // Handler สำหรับข้อจำกัดด้านอาหาร
     if (e.target.classList.contains('diet-select')) {
         const val = e.target.value;
         const index = e.target.getAttribute('data-index');
@@ -286,6 +222,25 @@ document.addEventListener('change', (e) => {
         if (detailContainer && detailInput) {
             const requireDetail = ["แพ้อาหารทะเล", "แพ้ถั่ว", "แพ้นม", "อื่นๆ"].includes(val);
             if (requireDetail) {
+                detailContainer.classList.remove('hidden');
+                detailInput.setAttribute('required', 'true');
+            } else {
+                detailContainer.classList.add('hidden');
+                detailInput.removeAttribute('required');
+                detailInput.value = ''; 
+            }
+        }
+    }
+    
+    // Handler สำหรับโรคประจำตัว
+    if (e.target.classList.contains('disease-radio')) {
+        const val = e.target.value;
+        const index = e.target.getAttribute('data-index');
+        const detailContainer = document.getElementById(`disease_detail_container_${index}`);
+        const detailInput = document.getElementById(`p_disease_detail_${index}`);
+        
+        if (detailContainer && detailInput) {
+            if (val === 'มี') {
                 detailContainer.classList.remove('hidden');
                 detailInput.setAttribute('required', 'true');
             } else {
@@ -321,18 +276,7 @@ function generateParticipantRows(countStr) {
               <input type="text" name="part-name" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none" required placeholder="ระบุชื่อ-นามสกุล">
           </div>
           <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">10. ประเภทผู้เข้าร่วม <span class="text-red-500">*</span></label>
-              <select name="part-type" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white" required>
-                  <option value="" disabled selected>-- เลือกประเภท --</option>
-                  <option value="ผู้ใหญ่">ผู้ใหญ่</option>
-                  <option value="เด็ก">เด็ก</option>
-                  <option value="ผู้สูงอายุ">ผู้สูงอายุ</option>
-                  <option value="ผู้ประสานงาน">ผู้ประสานงาน</option>
-                  <option value="อื่นๆ">อื่น ๆ</option>
-              </select>
-          </div>
-          <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">11. ขนาดเสื้อ <span class="text-red-500">*</span></label>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">10. ขนาดเสื้อ <span class="text-red-500">*</span></label>
               <select name="part-shirt" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white" required>
                   <option value="" disabled selected>-- เลือกขนาด --</option>
                   <option value="XS">XS</option>
@@ -348,21 +292,41 @@ function generateParticipantRows(countStr) {
               </select>
           </div>
           <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">12. ข้อจำกัดด้านอาหาร <span class="text-red-500">*</span></label>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">11. ข้อจำกัดด้านอาหาร <span class="text-red-500">*</span></label>
               <select name="part-diet" class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-secondary outline-none bg-white diet-select" data-index="${i}" required>
                   <option value="" disabled selected>-- เลือกข้อมูล --</option>
                   <option value="ไม่มี">ไม่มี</option>
-                  <option value="อาหารฮาลาล">อาหารฮาลาล</option>
-                  <option value="อาหารมังสวิรัติ">อาหารมังสวิรัติ</option>
                   <option value="แพ้อาหารทะเล">แพ้อาหารทะเล</option>
                   <option value="แพ้ถั่ว">แพ้ถั่ว</option>
                   <option value="แพ้นม">แพ้นม</option>
                   <option value="อื่นๆ">อื่น ๆ</option>
               </select>
           </div>
+          
+          <div class="col-span-1 md:col-span-1">
+              <label class="block text-sm font-semibold text-gray-700 mb-1">12. มีโรคประจำตัว/ข้อจำกัดการทำกิจกรรมกลางแจ้งหรือไม่ <span class="text-red-500">*</span></label>
+              <div class="flex gap-6 mt-3">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="has_disease_${i}" value="ไม่มี" class="w-4 h-4 accent-primary disease-radio" data-index="${i}" required> 
+                  <span class="text-gray-700">ไม่มี</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="has_disease_${i}" value="มี" class="w-4 h-4 accent-primary disease-radio" data-index="${i}"> 
+                  <span class="text-gray-700">มี</span>
+                </label>
+              </div>
+          </div>
+
+          <!-- กล่องรายละเอียดอาหาร -->
           <div id="diet_detail_container_${i}" class="col-span-1 md:col-span-2 hidden bg-red-50 p-3 rounded-lg border border-red-100">
-              <label class="block text-sm font-semibold text-gray-700 mb-1">13. รายละเอียดเพิ่มเติมเกี่ยวกับอาหาร <span class="text-red-500">*</span></label>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดเพิ่มเติมเกี่ยวกับอาหาร <span class="text-red-500">*</span></label>
               <input type="text" name="part-diet-detail" id="p_diet_detail_${i}" class="w-full border border-red-200 p-2.5 rounded-lg focus:ring-2 focus:ring-red-400 outline-none" placeholder="ตัวอย่าง: แพ้กุ้งและปู, ไม่รับประทานเนื้อวัว">
+          </div>
+
+          <!-- กล่องรายละเอียดโรคประจำตัว -->
+          <div id="disease_detail_container_${i}" class="col-span-1 md:col-span-2 hidden bg-yellow-50 p-3 rounded-lg border border-yellow-100">
+              <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดโรคประจำตัวหรือข้อจำกัด <span class="text-red-500">*</span></label>
+              <input type="text" name="part-disease-detail" id="p_disease_detail_${i}" class="w-full border border-yellow-200 p-2.5 rounded-lg focus:ring-2 focus:ring-yellow-400 outline-none" placeholder="ตัวอย่าง: โรคหอบหืด, ไม่สามารถยืนเป็นเวลานานได้">
           </div>
       </div>
     `;
@@ -374,7 +338,7 @@ function generateParticipantRows(countStr) {
 // 4. DATA SUBMISSION & VALIDATION
 // =====================================================================
 function submitSurvey(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   
   const intentCheck = document.querySelector('input[name="rad-intent"]:checked');
   if(!intentCheck) return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุความประสงค์เข้าร่วมกิจกรรม' });
@@ -396,7 +360,7 @@ function submitSurvey(e) {
 
   Swal.fire({
       title: 'ตรวจสอบความถูกต้อง',
-      text: 'กรุณาตรวจสอบจำนวนผู้เข้าร่วม รายชื่อ และขนาดเสื้อให้ถูกต้องก่อนส่งข้อมูล',
+      text: 'กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนยืนยันส่งเข้าระบบ',
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'ยืนยันส่งข้อมูล',
@@ -423,27 +387,27 @@ function executeDataSubmission(intent, totalPart) {
       estParticipants: document.getElementById("inp-est-part") ? document.getElementById("inp-est-part").value : 0,
       feedback: document.getElementById("txt-feedback") ? document.getElementById("txt-feedback").value.trim() : "",
       participants: [],
-      health_safety: {}
+      health_safety: {} // ส่งกลับไปเป็นอ็อบเจ็กต์ว่าง เพื่อรองรับ Backward Compatibility
     };
   
     if (intent === "เข้าร่วมกิจกรรม") {
       const rows = document.getElementById("participants-list").children;
+      let pIndex = 1;
+      
       for (let row of rows) {
         const name = row.querySelector('input[name="part-name"]').value.trim();
-        const type = row.querySelector('select[name="part-type"]').value;
         const shirtSize = row.querySelector('select[name="part-shirt"]').value;
         const diet = row.querySelector('select[name="part-diet"]').value;
         const dietDetail = row.querySelector('input[name="part-diet-detail"]').value.trim();
-        payload.participants.push({ name, type, shirtSize, diet, dietDetail });
+        
+        // ดึงข้อมูลโรคประจำตัวแบบแยกบุคคล
+        const diseaseCheck = row.querySelector(`input[name="has_disease_${pIndex}"]:checked`);
+        const hasDisease = diseaseCheck ? diseaseCheck.value : "ไม่มี";
+        const diseaseDetail = row.querySelector(`input[id="p_disease_detail_${pIndex}"]`).value.trim();
+
+        payload.participants.push({ name, shirtSize, diet, dietDetail, hasDisease, diseaseDetail });
+        pIndex++;
       }
-  
-      const diseaseCheck = document.querySelector('input[name="has_disease"]:checked');
-      payload.health_safety = {
-          has_disease: diseaseCheck ? diseaseCheck.value : "ไม่มี",
-          disease_details: document.getElementById("disease_details") ? document.getElementById("disease_details").value.trim() : "",
-          emergency_contact: document.getElementById("emergency_contact") ? document.getElementById("emergency_contact").value.trim() : "",
-          emergency_phone: document.getElementById("emergency_phone") ? document.getElementById("emergency_phone").value.trim() : ""
-      };
     }
   
     fetch(GAS_API_URL, {
@@ -467,7 +431,7 @@ function executeDataSubmission(intent, totalPart) {
 }
 
 // =====================================================================
-// 5. ADMIN DASHBOARD & DATATABLE LOGIC
+// 5. ADMIN DASHBOARD & DATATABLE LOGIC 
 // =====================================================================
 let tableData = [];
 let filteredData = [];
@@ -494,7 +458,7 @@ function loadAdminDashboard() {
   adminView.innerHTML = `
     <div class="flex flex-col md:flex-row h-screen w-full bg-gray-50 overflow-hidden text-sm md:text-base relative">
       
-      <!-- MOBILE HEADER (แสดงเฉพาะหน้าจอมือถือ) -->
+      <!-- MOBILE HEADER -->
       <div class="md:hidden flex items-center justify-between bg-[#173B1A] text-white p-4 shadow-md z-20">
          <h1 class="font-title font-bold text-lg">Green Unity 2026</h1>
          <button onclick="toggleSidebar()" class="p-2 focus:outline-none hover:bg-white/10 rounded-lg transition">
@@ -502,7 +466,6 @@ function loadAdminDashboard() {
          </button>
       </div>
 
-      <!-- SIDEBAR BACKDROP OVERLAY (พื้นหลังมืดๆ ตอนเปิดเมนูในมือถือ) -->
       <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden transition-opacity"></div>
 
       <!-- SIDEBAR -->
@@ -512,7 +475,6 @@ function loadAdminDashboard() {
             <h1 class="text-xl font-title font-bold text-secondary tracking-wide">Admin Panel</h1>
             <p class="text-xs text-gray-300 mt-1">Green Unity 2026</p>
           </div>
-          <!-- ปุ่มปิด Sidebar ในมือถือ -->
           <button onclick="toggleSidebar()" class="md:hidden text-gray-300 hover:text-white p-1">
              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
@@ -540,7 +502,6 @@ function loadAdminDashboard() {
       <main class="flex-1 overflow-y-auto p-4 md:p-10 relative">
         <h2 class="text-2xl md:text-3xl font-title font-bold text-gray-800 mb-6">แดชบอร์ดสรุปผลการสำรวจ</h2>
         
-        <!-- TOP SUMMARY CARDS -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
              <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">หน่วยงานร่วมใจ</span>
@@ -560,7 +521,6 @@ function loadAdminDashboard() {
           </div>
         </div>
 
-        <!-- TAB 1: OVERVIEW -->
         <div id="tab-overview" class="tab-content space-y-6">
           <div class="grid lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -574,7 +534,6 @@ function loadAdminDashboard() {
           </div>
         </div>
         
-        <!-- TAB 2: LOGISTICS -->
         <div id="tab-logistics" class="tab-content hidden space-y-6">
           <div class="grid lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -588,7 +547,6 @@ function loadAdminDashboard() {
           </div>
         </div>
 
-        <!-- TAB 3: DEMOGRAPHICS -->
         <div id="tab-demographics" class="tab-content hidden space-y-6">
           <div class="grid lg:grid-cols-2 gap-6">
              <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -601,7 +559,6 @@ function loadAdminDashboard() {
           </div>
         </div>
 
-        <!-- TAB 4: DATATABLE (รายชื่อและการค้นหา) -->
         <div id="tab-datatable" class="tab-content hidden space-y-4">
            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -625,12 +582,10 @@ function loadAdminDashboard() {
                        </tr>
                     </thead>
                     <tbody id="dataTableBody">
-                       <!-- ข้อมูลตารางจะแสดงที่นี่ -->
                     </tbody>
                  </table>
               </div>
 
-              <!-- Pagination Controls -->
               <div class="flex justify-between items-center mt-6 text-gray-600 font-semibold text-sm">
                  <button onclick="prevPage()" id="btn-prev" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50">⬅️ ก่อนหน้า</button>
                  <span id="pageInfo">หน้า 1 / 1</span>
@@ -652,7 +607,6 @@ function loadAdminDashboard() {
       if (res.status === "success") {
         const d = res.data;
         
-        // 1. Update Top Cards & Charts (อิงตามโค้ดเดิม)
         document.getElementById("stat-orgs").textContent = d.summary?.totalOrgs || 0;
         document.getElementById("stat-parts").textContent = d.summary?.totalParts || 0;
         document.getElementById("stat-shirts").textContent = d.summary?.totalShirts || 0;
@@ -661,14 +615,13 @@ function loadAdminDashboard() {
         const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } };
         const barOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } };
 
-        new Chart(document.getElementById('intentChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ยืนยันเข้าร่วม', 'ยังไม่แน่ใจ', 'ไม่เข้าร่วม'], datasets: [{ data: [d.intent?.joined || 0, d.intent?.unsure || 0, d.intent?.declined || 0], backgroundColor: ['#2E7D32', '#FBC02D', '#D32F2F'], borderWidth: 0 }] }, options: commonOptions });
+        new Chart(document.getElementById('intentChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ยืนยันเข้าร่วม', 'ไม่เข้าร่วม'], datasets: [{ data: [d.intent?.joined || 0, d.intent?.declined || 0], backgroundColor: ['#2E7D32', '#D32F2F'], borderWidth: 0 }] }, options: commonOptions });
         new Chart(document.getElementById('orgChart').getContext('2d'), { type: 'bar', data: { labels: ['ชุมชน', 'ลูกค้า/คู่ค้า', 'สถานศึกษา', 'ภาครัฐ'], datasets: [{ data: [d.orgStats?.village || 0, d.orgStats?.customer || 0, d.orgStats?.school || 0, d.orgStats?.gov || 0], backgroundColor: ['#66BB6A', '#42A5F5', '#FFA726', '#AB47BC'], borderRadius: 4 }] }, options: barOptions });
         const shirtLabels = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
         new Chart(document.getElementById('shirtChart').getContext('2d'), { type: 'bar', data: { labels: shirtLabels, datasets: [{ data: shirtLabels.map(size => d.logistics?.shirts[size] || 0), backgroundColor: '#81C784', borderRadius: 4 }] }, options: barOptions });
         new Chart(document.getElementById('foodChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ฮาลาล', 'มังสวิรัติ', 'แพ้อาหาร'], datasets: [{ data: [d.logistics?.halal || 0, d.logistics?.veg || 0, d.logistics?.allergy || 0], backgroundColor: ['#4CAF50', '#8BC34A', '#FF7043'], borderWidth: 0 }] }, options: commonOptions });
         new Chart(document.getElementById('demoChart').getContext('2d'), { type: 'doughnut', data: { labels: ['ผู้ใหญ่', 'เด็ก', 'ผู้สูงอายุ'], datasets: [{ data: [d.demographics?.adult || 0, d.demographics?.child || 0, d.demographics?.elder || 0], backgroundColor: ['#388E3C', '#66BB6A', '#FFCA28'], borderWidth: 0 }] }, options: commonOptions });
 
-        // 2. จัดเตรียมข้อมูลสำหรับตารางรายชื่อ
         tableData = d.registrations || [];
         filteredData = [...tableData];
         currentPage = 1;
@@ -681,7 +634,6 @@ function loadAdminDashboard() {
     .catch(err => { Swal.close(); Swal.fire({ icon: 'error', title: 'การเชื่อมต่อผิดพลาด', text: 'ไม่สามารถดึงข้อมูลสถิติได้' }); });
 }
 
-// ฟังก์ชันสลับเมนู
 window.switchTab = function(tabName) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('bg-primary'); btn.classList.add('hover:bg-white/10');
@@ -692,7 +644,6 @@ window.switchTab = function(tabName) {
   document.getElementById(`tab-${tabName}`).classList.remove('hidden');
 };
 
-// ======================= TABLE LOGIC =======================
 function renderTable() {
   const tbody = document.getElementById("dataTableBody");
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
@@ -712,7 +663,6 @@ function renderTable() {
           let badgeColor = row.intent === "เข้าร่วมกิจกรรม" ? "bg-green-100 text-green-700" : (row.intent === "ยังไม่แน่ใจ" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700");
           let hasParticipants = row.participants && row.participants.length > 0;
           
-          // Master Row (ผู้ประสานงาน)
           html += `
             <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
               <td class="p-3 text-gray-500">${start + index + 1}</td>
@@ -726,11 +676,11 @@ function renderTable() {
             </tr>
           `;
           
-          // Detail Row (รายชื่อผู้ติดตาม ซ่อนไว้เริ่มต้น)
           if (hasParticipants) {
-             let partHtml = `<table class="w-full text-sm text-left"><tr class="text-gray-500 border-b border-gray-200"><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>ไซซ์เสื้อ</th><th>อาหาร</th></tr>`;
+             // อัปเดต: นำ <th>ประเภท</th> ออกจากตารางย่อยเพื่อให้สอดคล้องกับข้อมูลใหม่
+             let partHtml = `<table class="w-full text-sm text-left"><tr class="text-gray-500 border-b border-gray-200"><th>ชื่อ-นามสกุล</th><th>ไซซ์เสื้อ</th><th>อาหาร</th></tr>`;
              row.participants.forEach(p => {
-                 partHtml += `<tr class="border-b border-gray-100/50"><td class="py-2">${p.name || "-"}</td><td>${p.type || "-"}</td><td>${p.shirt || "-"}</td><td>${p.diet || "-"}</td></tr>`;
+                 partHtml += `<tr class="border-b border-gray-100/50"><td class="py-2">${p.name || "-"}</td><td>${p.shirt || p.shirtSize || "-"}</td><td>${p.diet || "-"}</td></tr>`;
              });
              partHtml += `</table>`;
              
@@ -761,7 +711,7 @@ function handleSearch() {
           (d.orgName && d.orgName.toLowerCase().includes(query))
       );
   }
-  currentPage = 1; // กลับไปหน้าแรกเสมอเมื่อค้นหา
+  currentPage = 1;
   renderTable();
 }
 
@@ -773,22 +723,16 @@ window.toggleDetail = function(id) {
    else el.classList.add("hidden");
 };
 
-// =====================================================================
-// ฟังก์ชันสำหรับเปิด-ปิด Sidebar บนจอมือถือ
-// =====================================================================
 window.toggleSidebar = function() {
    const sidebar = document.getElementById("admin-sidebar");
    const overlay = document.getElementById("sidebar-overlay");
    
-   // เช็กว่าถ้าเปิดบนจอใหญ่ (Desktop) ไม่ต้องทำงาน
    if (window.innerWidth >= 768) return; 
 
    if (sidebar.classList.contains("-translate-x-full")) {
-       // เปิดเมนู
        sidebar.classList.remove("-translate-x-full");
        overlay.classList.remove("hidden");
    } else {
-       // ปิดเมนู
        sidebar.classList.add("-translate-x-full");
        overlay.classList.add("hidden");
    }
